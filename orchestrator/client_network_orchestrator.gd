@@ -36,3 +36,4 @@ func receive_state(state_update: Dictionary) -> void:
 	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag).timeout
 
 	print("Client:")
+	print(state_update)
