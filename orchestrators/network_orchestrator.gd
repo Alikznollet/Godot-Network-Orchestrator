@@ -13,8 +13,12 @@ class_name NetworkOrchestrator
 
 @export var enable_lag_compensation: bool
 
+## Multiplayer peer used to rpc the other peers.
+var peer: ENetMultiplayerPeer
+
 @abstract
 func send_state() -> void
 
+@rpc()
 @abstract
-func receive_state() -> void
+func receive_state(state: String) -> void
