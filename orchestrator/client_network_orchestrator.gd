@@ -5,6 +5,13 @@ class_name ClientNetworkOrchestrator
 ## Receives the authoritative state from the authority and has to apply this to the client state.
 ## When a change happens in the client state sends this change to the authority.
 
+# -- Debug -- #
+
+## How much delay to add to each state update before it is sent and received.
+## This is only meant to be used in testing scenarios to emulate lag.
+## Only executed if game is running in a debug build.
+@export var artificial_lag: float
+
 func _ready() -> void:
 	# Supposed to be replaced with SteamMultiplayerPeer in a real setting.
 	peer = ENetMultiplayerPeer.new()
@@ -14,12 +21,18 @@ func _ready() -> void:
 	assert(status == OK, "ClientNetworkOrchestrator: Could not connect to local server. Status: %d" % status)
 
 	multiplayer.multiplayer_peer = peer
+	
+	# Create a local state
+	game_state = ClientGameState.new()
 
 ## Send the client state to the authority.
 func send_state() -> void:
+	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag).timeout
+
 	pass
 
 ## Receive an authoritative state and apply it to the client state.
-func receive_state(state: String) -> void:
+func receive_state(state_update: Dictionary) -> void:
+	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag).timeout
+
 	print("Client:")
-	print(state)

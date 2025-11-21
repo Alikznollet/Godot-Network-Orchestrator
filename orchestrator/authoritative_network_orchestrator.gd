@@ -40,6 +40,9 @@ func _ready() -> void:
 	add_child(update_timer)
 
 	update_timer.start()
+
+	# Create an authoritative state
+	game_state = AuthoritativeGameState.new()
 	
 
 ## Send the authoritative state to all connected peers.
@@ -48,6 +51,5 @@ func send_state() -> void:
 
 ## Receive client states from all connected peers.
 ## Check them for legitimacy and then apply them to the authoritative state.
-func receive_state(state: String) -> void:
+func receive_state(state_update: Dictionary) -> void:
 	print("Authority:")
-	print(state)

@@ -16,9 +16,12 @@ class_name NetworkOrchestrator
 ## Multiplayer peer used to rpc the other peers.
 var peer: ENetMultiplayerPeer
 
+## The current (authoritative/client) state of the game, depending on the type of Orchestrator.
+var game_state: GameState
+
 @abstract
 func send_state() -> void
 
 @rpc()
 @abstract
-func receive_state(state: String) -> void
+func receive_state(state_update: Dictionary) -> void
