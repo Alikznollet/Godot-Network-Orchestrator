@@ -28,6 +28,9 @@ func _ready() -> void:
 			"v":
 				print("verbose")
 
+	# Add the local button
+	add_child(DemoEntity.new())
+
 	# -- Links for buttons -- #
 
 	%UpdFreq.value_changed.connect(

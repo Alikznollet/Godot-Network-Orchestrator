@@ -47,11 +47,17 @@ func _ready() -> void:
 
 ## Send the authoritative state to all connected peers.
 func send_state() -> void:
-	receive_state.rpc(game_state.state_update)
+	var update: Dictionary = game_state.state_update
+	game_state.state_update = {}
+
+	if not update.is_empty():
+		receive_state.rpc(update)
+		print("Send Auth:")
+		print(update)
 
 ## Receive client states from all connected peers.
 ## Check them for legitimacy and then apply them to the authoritative state.
 func receive_state(state_update: Dictionary) -> void:
-
-	print("Authority:")
+	game_state.apply_state_update(state_update)
+	print("Receive Auth:")
 	print(state_update)

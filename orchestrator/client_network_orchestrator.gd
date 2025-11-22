@@ -24,16 +24,24 @@ func _ready() -> void:
 	
 	# Create a local state
 	game_state = ClientGameState.new()
+	game_state.state_updated.connect(send_state) # Send updated state each time something changes.
 
 ## Send the client state to the authority.
 func send_state() -> void:
 	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag).timeout
 
-	pass
+	var update: Dictionary = game_state.state_update
+	game_state.state_update = {}
+
+	if not update.is_empty():
+		receive_state.rpc_id(1, update)
+		print("Send Client:")
+		print(update)
 
 ## Receive an authoritative state and apply it to the client state.
 func receive_state(state_update: Dictionary) -> void:
 	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag).timeout
 
-	print("Client:")
+	game_state.apply_state_update(state_update)
+	print("Receive Client:")
 	print(state_update)

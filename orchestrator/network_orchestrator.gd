@@ -3,6 +3,9 @@ extends Node
 class_name NetworkOrchestrator
 ## Abstract interface defining a couple of important networking functions.
 
+func _init() -> void:
+	NetworkBus.network_orchestrator = self
+
 # -- Settings -- #
 
 @export var enable_prediction: bool
@@ -22,6 +25,6 @@ var game_state: GameState
 @abstract
 func send_state() -> void
 
-@rpc()
+@rpc("any_peer")
 @abstract
 func receive_state(state_update: Dictionary) -> void

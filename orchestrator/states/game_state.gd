@@ -16,26 +16,40 @@ class_name GameState
 ## The private function is the function that checks the new state.
 ## The public function can be called from outside and will force the state.
 
+# -- Signals -- #
+
+## Signals whether the state has been updated.
+@warning_ignore("unused_signal")
+signal state_updated()
+
+# -- Content -- #
+
 ## Title of the game. Just a dummy.
 var _title: String
 var title:
 	set(new_title): _set_title(new_title)
 	get(): return _title
 
-@abstract 
+@abstract
 func _set_title(new_title)
 @abstract
 func set_title(new_title)
+
+var _entities: Array[DemoEntity]
+var entities: Array:
+	set(new_entities): _set_entities(new_entities)
+	get(): return _entities
+
+@abstract
+func _set_entities(new_entities)
+@abstract
+func set_entities(new_entities)
 
 # -- State Update -- #
 
 ## Consists of all recently updated variables.
 ## Set to an empty dictionary if read.
-var state_update: Dictionary:
-	get():
-		var _temp = state_update
-		state_update = {}
-		return _temp
+var state_update: Dictionary = {}
 
 func apply_state_update(p_state_update: Dictionary):
 	# When applying a state update we want all checks to happen.
