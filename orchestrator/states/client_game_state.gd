@@ -20,7 +20,7 @@ func _set_entities(new_entities: Array):
 				break
 
 		var entity: DemoEntity
-		if idx > 0:
+		if idx >= 0:
 			entity = _entities[idx]
 			entity.global_position = entity_meta.position
 		else:
@@ -35,7 +35,14 @@ func _set_entities(new_entities: Array):
 func set_entities(new_entities):
 	# When setting locally we just want to let the state know that a change happened.
 	# If the entity is not in the list yet we do want to add it.
-	if _entities.find(new_entities[0]) < 0:
+	var idx: int = -1
+	for i in range(len(_entities)):
+		var ent: DemoEntity = _entities[i]
+		if ent.entity_id == new_entities[0].entity_id:
+			idx = i
+			break
+	
+	if idx < 0:
 		_entities.append(new_entities[0])
 
 	var entity_metadata: Dictionary = new_entities[0].network_metadata()

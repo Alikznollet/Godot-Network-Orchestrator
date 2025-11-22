@@ -35,13 +35,9 @@ func send_state() -> void:
 
 	if not update.is_empty():
 		receive_state.rpc_id(1, update)
-		print("Send Client:")
-		print(update)
 
 ## Receive an authoritative state and apply it to the client state.
 func receive_state(state_update: Dictionary) -> void:
 	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag).timeout
 
 	game_state.apply_state_update(state_update)
-	print("Receive Client:")
-	print(state_update)

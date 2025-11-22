@@ -52,12 +52,8 @@ func send_state() -> void:
 
 	if not update.is_empty():
 		receive_state.rpc(update)
-		print("Send Auth:")
-		print(update)
 
 ## Receive client states from all connected peers.
 ## Check them for legitimacy and then apply them to the authoritative state.
 func receive_state(state_update: Dictionary) -> void:
 	game_state.apply_state_update(state_update)
-	print("Receive Auth:")
-	print(state_update)

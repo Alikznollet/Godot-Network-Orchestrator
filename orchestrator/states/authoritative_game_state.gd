@@ -18,7 +18,7 @@ func _set_entities(new_entities: Array):
 			break
 
 	var entity: DemoEntity
-	if idx > 0:
+	if idx >= 0:
 		entity = _entities[idx]
 		entity.global_position = new_entities[0].position
 	else:
