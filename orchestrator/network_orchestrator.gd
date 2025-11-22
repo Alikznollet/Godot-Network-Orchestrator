@@ -20,7 +20,7 @@ func _init() -> void:
 var peer: ENetMultiplayerPeer
 
 ## The current (authoritative/client) state of the game, depending on the type of Orchestrator.
-var game_state: GameState
+var game_state: GameState = GameState.new()
 
 @abstract
 func send_state() -> void

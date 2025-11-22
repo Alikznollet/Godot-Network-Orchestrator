@@ -2,24 +2,22 @@ extends Sprite2D
 class_name DemoEntity
 ## Moveable entity used for network architecture testing.
 
-var entity_id: int
+var link_state: EntityLinkState = EntityLinkState.new()
 
 func _ready() -> void:
 	var t := GradientTexture2D.new()
 	texture = t
 
-	entity_id = multiplayer.get_unique_id()
-	NetworkBus.network_orchestrator.game_state.set_entities([self])
+	link_state.owner_pid = multiplayer.get_unique_id()
+	link_state.global_position = global_position
+
+	link_state.state_changed.connect(update)
+
+func update() -> void:
+	global_position = link_state.global_position
 
 func _process(delta: float) -> void:
 	var vector: Vector2 = Input.get_vector("left", "right", "up", "down")
 
-	if vector.length() != 0 and entity_id == multiplayer.get_unique_id():
-		global_position += vector * 100 * delta
-		NetworkBus.network_orchestrator.game_state.set_entities([self])
-
-func network_metadata() -> Dictionary:
-	return {
-		"entity_id": entity_id,
-		"position": global_position
-	}
+	if vector.length() != 0 and link_state.owner_pid == multiplayer.get_unique_id():
+		link_state.global_position += vector * 100 * delta

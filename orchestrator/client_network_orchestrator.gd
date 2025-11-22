@@ -21,10 +21,6 @@ func _ready() -> void:
 	assert(status == OK, "ClientNetworkOrchestrator: Could not connect to local server. Status: %d" % status)
 
 	multiplayer.multiplayer_peer = peer
-	
-	# Create a local state
-	game_state = ClientGameState.new()
-	game_state.state_updated.connect(send_state) # Send updated state each time something changes.
 
 ## Send the client state to the authority.
 func send_state() -> void:

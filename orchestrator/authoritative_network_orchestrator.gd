@@ -41,10 +41,6 @@ func _ready() -> void:
 
 	update_timer.start()
 
-	# Create an authoritative state
-	game_state = AuthoritativeGameState.new()
-	
-
 ## Send the authoritative state to all connected peers.
 func send_state() -> void:
 	var update: Dictionary = game_state.state_update
