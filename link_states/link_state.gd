@@ -21,10 +21,11 @@ func to_dict() -> Dictionary
 
 ## Will apply the dictionary to the current state.
 @abstract
-func apply_dict() -> void
+func apply_dict(dict: Dictionary) -> void
 
 ## Will return an instantiated node made from the state.
 ## This method is only defined on states of nodes.
 func init_state() -> Variant:
-	assert(false, "LinkState: init_state() was called on a non Node, or not defined.")
+	var msg := "LinkState: init_state() was called on a non Node, or not defined."
+	assert(false, msg)
 	return null
