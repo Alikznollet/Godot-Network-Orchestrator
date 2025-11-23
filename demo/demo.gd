@@ -22,6 +22,7 @@ func _ready() -> void:
 					network_orch = AuthoritativeNetworkOrchestrator.new()
 					multiplayer.peer_connected.connect(peer_connected)
 					add_child(network_orch)
+					peer_connected(1) # Connect the host themselves
 				else:
 					network_orch = ClientNetworkOrchestrator.new()
 					add_child(network_orch)
@@ -42,4 +43,4 @@ func peer_connected(id: int):
 	els.owner_pid = id
 	els.global_position = Vector2.ZERO
 
-	NetworkBus.network_orchestrator.game_state.force_add_state(els)
+	NetworkBus.network_orchestrator.game_state.add_state(els)

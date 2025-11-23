@@ -19,7 +19,7 @@ func apply_dict(dict: Dictionary) -> void:
 	owner_pid = dict.owner_pid
 	global_position = dict.global_position
 
-	state_changed.emit()
+	external_state_change.emit(self)
 
 func init_state() -> void:
 	var entity := DemoEntity.new()

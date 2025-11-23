@@ -1,3 +1,4 @@
+@abstract
 extends Resource
 class_name GameState
 ## Keeps track of the global state of the game.
@@ -8,14 +9,24 @@ class_name GameState
 ## ID -> LinkState dictionary. Holds all possible update-able states.
 var link_states: Dictionary[int, LinkState] = {}
 
-## Will forcible add a state to the state dict.
-func force_add_state(state: LinkState) -> void:
+# -- Adding & Applying -- #
+
+## Adds a LinkState to the state dictionary.
+## This is to only be called from the authority.
+func add_state(ls: LinkState) -> void:
+	if NetworkBus.multiplayer.get_unique_id() != 1: print("GameState: Cannot add LinkState when not the authority."); return
+
 	# Generate a random id until it is not present.
 	var id := randi()
 	while link_states.has(id): id = randi()
 
-	link_states[id] = state
-	state.init_state()
+	link_states[id] = ls
+	ls.id = id
+	ls.init_state()
+	ls.local_state_change.connect(local_change)
+	ls.external_state_change.connect(external_change)
+
+	updates.append(id)
 
 ## Will apply a list of dictionaries of LinkStates.
 func apply_dicts(dicts: Array[Dictionary]) -> void:
@@ -35,9 +46,14 @@ func apply_dict(dict: Dictionary) -> void:
 	else:
 		assert(LinkState.STATES.has(dict.type), "GameState: LinkState.STATES does not have an entry for %s." % dict.type)
 		var ls: LinkState = LinkState.STATES[dict.type].new()
+		ls.id = dict.id
 		ls.apply_dict(dict)
 		ls.init_state()
 		link_states[dict.id] = ls
+		ls.local_state_change.connect(local_change)
+		ls.external_state_change.connect(external_change)
+	
+# -- Getting Dictionaries -- #
 
 ## Get all LinkState dictionaries as an array.
 func get_all_dicts() -> Array[Dictionary]:
@@ -57,13 +73,29 @@ func get_dict_from_id(id: int) -> Dictionary:
 	var dict := ls.to_dict()
 
 	dict["id"] = id
-
-	# TODO: Make sure this actually can instantiate.
 	dict["type"] = ls.get_script().get_global_name()
 
 	return dict
 
-# -- Updates -- #
+# -- Updates & Changes -- #
+
+@abstract
+## Reacts to a local change of any LinkState.
+func local_change(ls: LinkState) -> void
+
+@abstract
+## Reacts to a change from outside. Client -> Authority or other way around.
+func external_change(ls: LinkState) -> void
+
+## Returns an array of updated states as dictionaries and resets the updates variable.
+func get_updated_dicts() -> Array[Dictionary]:
+	var dicts: Array[Dictionary] = []
+	for id in updates:
+		var dict: Dictionary = get_dict_from_id(id)
+		dicts.append(dict)
+
+	updates.clear()
+	return dicts
 
 ## Array of updated LinkState ids.
 var updates: Array[int] = []

@@ -22,12 +22,13 @@ func _ready() -> void:
 
 	multiplayer.multiplayer_peer = peer
 
+	game_state = ClientGameState.new()
+
 ## Send the client state to the authority.
 func send_state() -> void:
 	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag).timeout
 
-	# TODO: Make sure this only sends what was altered.
-	var update: Array[Dictionary] = game_state.get_all_dicts()
+	var update: Array[Dictionary] = game_state.get_updated_dicts()
 
 	if not update.is_empty():
 		receive_state.rpc_id(1, update)

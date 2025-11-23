@@ -41,10 +41,11 @@ func _ready() -> void:
 
 	update_timer.start()
 
+	game_state = AuthoritativeGameState.new()
+
 ## Send the authoritative state to all connected peers.
 func send_state() -> void:
-	# TODO: Make sure this only sends what was altered.
-	var update: Array[Dictionary] = game_state.get_all_dicts()
+	var update: Array[Dictionary] = game_state.get_updated_dicts()
 
 	if not update.is_empty():
 		receive_state.rpc(update)
