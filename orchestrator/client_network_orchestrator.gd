@@ -26,14 +26,14 @@ func _ready() -> void:
 func send_state() -> void:
 	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag).timeout
 
-	var update: Dictionary = game_state.state_update
-	game_state.state_update = {}
+	# TODO: Make sure this only sends what was altered.
+	var update: Array[Dictionary] = game_state.get_all_dicts()
 
 	if not update.is_empty():
 		receive_state.rpc_id(1, update)
 
 ## Receive an authoritative state and apply it to the client state.
-func receive_state(state_update: Dictionary) -> void:
+func receive_state(updates: Array[Dictionary]) -> void:
 	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag).timeout
 
-	game_state.apply_state_update(state_update)
+	game_state.apply_dicts(updates)

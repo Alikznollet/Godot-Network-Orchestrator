@@ -7,10 +7,6 @@ var link_state: EntityLinkState = EntityLinkState.new()
 func _ready() -> void:
 	var t := GradientTexture2D.new()
 	texture = t
-
-	link_state.owner_pid = multiplayer.get_unique_id()
-	link_state.global_position = global_position
-
 	link_state.state_changed.connect(update)
 
 func update() -> void:
@@ -21,3 +17,4 @@ func _process(delta: float) -> void:
 
 	if vector.length() != 0 and link_state.owner_pid == multiplayer.get_unique_id():
 		link_state.global_position += vector * 100 * delta
+		link_state.state_changed_local.emit()

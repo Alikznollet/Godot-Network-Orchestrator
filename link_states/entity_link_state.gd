@@ -10,13 +10,20 @@ var global_position: Vector2
 # -- -- #
 
 func to_dict() -> Dictionary:
-	return {}
+	return {
+		"owner_pid": owner_pid,
+		"global_position": global_position
+	}
 
 func apply_dict(dict: Dictionary) -> void:
-	pass
+	owner_pid = dict.owner_pid
+	global_position = dict.global_position
 
-func init_state() -> DemoEntity:
+	state_changed.emit()
+
+func init_state() -> void:
 	var entity := DemoEntity.new()
 	entity.link_state = self
-
-	return entity
+	
+	# Adds it immediately to the place where it belongs.
+	NetworkBus.network_orchestrator.get_parent().add_child(entity)

@@ -13,6 +13,10 @@ class_name LinkState
 @warning_ignore("unused_signal")
 signal state_changed()
 
+## Broadcasted whenever the state receives a proposed change.
+@warning_ignore("unused_signal")
+signal state_changed_local()
+
 # -- Methods -- #
 
 ## Will turn the LinkState into a dictionary that can be sent over the network.
@@ -23,9 +27,7 @@ func to_dict() -> Dictionary
 @abstract
 func apply_dict(dict: Dictionary) -> void
 
-## Will return an instantiated node made from the state.
-## This method is only defined on states of nodes.
-func init_state() -> Variant:
-	var msg := "LinkState: init_state() was called on a non Node, or not defined."
-	assert(false, msg)
-	return null
+## Will initialize the node linked to this state.
+## When no node is linked to the state this does nothing.
+func init_state() -> void:
+	pass

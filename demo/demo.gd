@@ -20,16 +20,14 @@ func _ready() -> void:
 			"server":
 				if value == "yes":
 					network_orch = AuthoritativeNetworkOrchestrator.new()
+					multiplayer.peer_connected.connect(peer_connected)
+					add_child(network_orch)
 				else:
 					network_orch = ClientNetworkOrchestrator.new()
+					add_child(network_orch)
 					%UpdFreq.editable = false
-
-				add_child(network_orch)
 			"v":
 				print("verbose")
-
-	# Add the local button
-	add_child(DemoEntity.new())
 
 	# -- Links for buttons -- #
 
@@ -38,3 +36,10 @@ func _ready() -> void:
 			network_orch.target_update_frequency = val
 			%UpdFreqLabel.text = str(val)
 	)
+
+func peer_connected(id: int):
+	var els := EntityLinkState.new()
+	els.owner_pid = id
+	els.global_position = Vector2.ZERO
+
+	NetworkBus.network_orchestrator.game_state.force_add_state(els)

@@ -27,4 +27,4 @@ func send_state() -> void
 
 @rpc("any_peer")
 @abstract
-func receive_state(state_update: Dictionary) -> void
+func receive_state(updates: Array[Dictionary]) -> void

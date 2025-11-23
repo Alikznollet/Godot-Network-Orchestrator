@@ -43,13 +43,14 @@ func _ready() -> void:
 
 ## Send the authoritative state to all connected peers.
 func send_state() -> void:
-	var update: Dictionary = game_state.state_update
-	game_state.state_update = {}
+	# TODO: Make sure this only sends what was altered.
+	var update: Array[Dictionary] = game_state.get_all_dicts()
 
 	if not update.is_empty():
 		receive_state.rpc(update)
 
 ## Receive client states from all connected peers.
 ## Check them for legitimacy and then apply them to the authoritative state.
-func receive_state(state_update: Dictionary) -> void:
-	game_state.apply_state_update(state_update)
+func receive_state(updates: Array[Dictionary]) -> void:
+	# TODO: Apply the needed checks here to check for client state correctness.
+	game_state.apply_dicts(updates)
