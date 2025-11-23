@@ -56,6 +56,8 @@ func get_dict_from_id(id: int) -> Dictionary:
 	var dict := ls.to_dict()
 
 	dict["id"] = id
+
+	# TODO: Make sure this actually can instantiate.
 	dict["type"] = ls.get_script().get_global_name()
 
 	return dict
