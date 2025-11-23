@@ -38,6 +38,11 @@ func _ready() -> void:
 			%UpdFreqLabel.text = str(val)
 	)
 
+	%ArtificialLag.text_changed.connect(
+		func (val):
+			if network_orch is ClientNetworkOrchestrator: network_orch.artificial_lag = int(val)
+	)
+
 func peer_connected(id: int):
 	var els := EntityLinkState.new()
 	els.owner_pid = id

@@ -10,6 +10,8 @@ class_name LinkState
 ## ID is stored here and in the dictionary.
 var id: int
 
+var tracker: int = 0
+
 # -- Signals -- #
 
 @warning_ignore("unused_signal")

@@ -97,5 +97,11 @@ func get_updated_dicts() -> Array[Dictionary]:
 	updates.clear()
 	return dicts
 
+## Adds a LinkState index to the updates array if it is not already in there.
+func add_update(ls: LinkState) -> void:
+	var id: int = ls.id
+	if not updates.has(id):
+		updates.append(id)
+
 ## Array of updated LinkState ids.
 var updates: Array[int] = []

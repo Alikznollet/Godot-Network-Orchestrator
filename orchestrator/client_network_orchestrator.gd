@@ -26,7 +26,7 @@ func _ready() -> void:
 
 ## Send the client state to the authority.
 func send_state() -> void:
-	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag).timeout
+	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag/1000).timeout
 
 	var update: Array[Dictionary] = game_state.get_updated_dicts()
 
@@ -35,6 +35,6 @@ func send_state() -> void:
 
 ## Receive an authoritative state and apply it to the client state.
 func receive_state(updates: Array[Dictionary]) -> void:
-	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag).timeout
+	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag/1000).timeout
 
 	game_state.apply_dicts(updates)

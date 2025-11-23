@@ -9,7 +9,7 @@ func local_change(ls: LinkState) -> void:
 	# TODO: Based on Client Prediction we can also just change the state here.
 
 	# When an update happens we immediately send it.
-	updates.append(ls.id)
+	add_update(ls)
 	NetworkBus.network_orchestrator.send_state()
 
 func external_change(ls: LinkState) -> void:

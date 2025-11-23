@@ -8,10 +8,10 @@ class_name AuthoritativeGameState
 func local_change(ls: LinkState) -> void:
 	# Force the authority to update immediately after a local change.
 	ls.update.emit()
-	updates.append(ls.id)
+	add_update(ls)
 
 func external_change(ls: LinkState) -> void:
 	# TODO: Perform the needed checks here for incoming outside info.
 
 	ls.update.emit()
-	updates.append(ls.id)
+	add_update(ls)
