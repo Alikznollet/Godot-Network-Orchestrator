@@ -16,5 +16,4 @@ func _process(delta: float) -> void:
 	var vector: Vector2 = Input.get_vector("left", "right", "up", "down")
 
 	if vector.length() != 0 and link_state.owner_pid == multiplayer.get_unique_id():
-		link_state.global_position += vector * 100 * delta
-		link_state.local_state_change.emit(link_state)
+		link_state.move(vector * 100 * delta)

@@ -10,7 +10,21 @@ class_name LinkState
 ## ID is stored here and in the dictionary.
 var id: int
 
-var tracker: int = 0
+func _init() -> void:
+	input_tracker.new_input.connect(_new_input)
+
+# -- Input Tracking & Processing -- #
+
+## Tracks the last n updates of the LinkState.
+## Only holds potential queued inputs.
+var input_tracker: LinkStateInputTracker = LinkStateInputTracker.new(200)
+
+# ! Functions regarding inputs are defined in the link_states themselves.
+
+## Listens whether a new input has been done for this LinkState.
+## If so will emit the local_state_change signal.
+func _new_input() -> void:
+	local_state_change.emit(self)
 
 # -- Signals -- #
 

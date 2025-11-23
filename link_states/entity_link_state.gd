@@ -7,6 +7,13 @@ var owner_pid: int
 ## Global position of the entity.
 var global_position: Vector2
 
+# -- Input -- #
+
+## Move in a certain direction
+func move(direction: Vector2) -> void:
+	var input: Dictionary = { "direction": direction }
+	input_tracker.add_input(input)
+
 # -- -- #
 
 func to_dict() -> Dictionary:
