@@ -33,7 +33,8 @@ func apply_dict(dict: Dictionary) -> void:
 		var ls: LinkState = link_states[dict.id]
 		ls.apply_dict(dict)
 	else:
-		var ls: LinkState = ClassDB.instantiate(dict.type)
+		assert(LinkState.STATES.has(dict.type), "GameState: LinkState.STATES does not have an entry for %s." % dict.type)
+		var ls: LinkState = LinkState.STATES[dict.type].new()
 		ls.apply_dict(dict)
 		ls.init_state()
 		link_states[dict.id] = ls

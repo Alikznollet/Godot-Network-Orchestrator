@@ -31,3 +31,9 @@ func apply_dict(dict: Dictionary) -> void
 ## When no node is linked to the state this does nothing.
 func init_state() -> void:
 	pass
+
+# -- States -- #
+
+static var STATES: Dictionary[StringName, GDScript] = {
+	"EntityLinkState": EntityLinkState
+}
