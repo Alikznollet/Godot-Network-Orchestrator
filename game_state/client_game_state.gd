@@ -20,6 +20,3 @@ func local_change(ls: LinkState, input: Dictionary) -> void:
 func external_change(ls: LinkState) -> void:
 	# We have received an authoritative state from the server so we just update.
 	ls.update.emit()
-
-	print("Incoming States client")
-	print(ls.to_dict())

@@ -26,11 +26,10 @@ func _ready() -> void:
 
 ## Send the client state to the authority.
 func send_state() -> void:
-	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag/1000).timeout
-
 	var update: Array[Dictionary] = game_state.get_updated_dicts()
 
 	if not update.is_empty():
+		if OS.is_debug_build(): await get_tree().create_timer(artificial_lag/1000).timeout
 		receive_state.rpc_id(1, update)
 
 ## Receive an authoritative state and apply it to the client state.

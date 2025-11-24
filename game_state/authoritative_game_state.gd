@@ -22,6 +22,3 @@ func external_change(ls: LinkState) -> void:
 
 	# Send the whole state altered back to the clients
 	add_update(ls.id, ls.to_dict())
-
-	print("Incoming Inputs authority")
-	print(ls.to_dict())
