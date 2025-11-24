@@ -15,7 +15,7 @@ func local_change(ls: LinkState) -> void:
 	## Immediately tell the client to update. This will trigger Client Prediction.
 	ls.update.emit()
 	
-	NetworkBus.network_orchestrator.send_state()
+	send_updates.emit()
 
 ## An external change means the authority forced us to update our local state.
 func external_change(ls: LinkState) -> void:

@@ -12,6 +12,11 @@ class_name ClientNetworkOrchestrator
 ## Only executed if game is running in a debug build.
 @export var artificial_lag: float
 
+# -- Initialization -- #
+
+func _init() -> void:
+	game_state = ClientGameState.new()
+
 func _ready() -> void:
 	# Supposed to be replaced with SteamMultiplayerPeer in a real setting.
 	peer = ENetMultiplayerPeer.new()
@@ -22,7 +27,7 @@ func _ready() -> void:
 
 	multiplayer.multiplayer_peer = peer
 
-	game_state = ClientGameState.new()
+# -- Sending & Receiving -- #
 
 ## Send the client state to the authority.
 func send_state() -> void:

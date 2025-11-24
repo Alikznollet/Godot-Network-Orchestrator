@@ -20,11 +20,13 @@ func _ready() -> void:
 			"server":
 				if value == "yes":
 					network_orch = AuthoritativeNetworkOrchestrator.new()
+					NetworkBus.network_orchestrator = network_orch
 					multiplayer.peer_connected.connect(peer_connected)
 					add_child(network_orch)
 					peer_connected(1) # Connect the host themselves
 				else:
 					network_orch = ClientNetworkOrchestrator.new()
+					NetworkBus.network_orchestrator = network_orch
 					add_child(network_orch)
 					%UpdFreq.editable = false
 			"v":

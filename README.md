@@ -1,2 +1,10 @@
 # NetworkOrchestrator
-Godot Node setup that allows for easy multiplayer with things like client-side prediction, reconsilitation, interpolation and lag compensation.
+
+Godot module that makes fast-paced multiplayer networking easier to implement and manage. 
+
+
+## TODO
+
+- Write Documentation on how to use the Module.
+- Implement Entity interpolation.
+- Implement Lag Compensation.

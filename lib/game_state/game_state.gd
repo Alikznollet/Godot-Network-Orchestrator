@@ -12,6 +12,9 @@ var link_states: Dictionary[int, LinkState] = {}
 
 # -- Adding States -- #
 
+## Emitted when a LinkState is initialized with a Node.
+signal node_added(node: Node)
+
 ## Adds a LinkState to the state dictionary.
 ## This is to only be called from the authority. Though not enforced in here.
 ## Optionally returns a node if one is linked to the state, otherwise just null.
@@ -30,7 +33,7 @@ func add_state(ls: LinkState) -> void:
 
 	# Return the node linked to the state if there is one.
 	var node: Node = ls.init_node()
-	if node: NetworkBus.network_orchestrator.get_parent().add_child(node)
+	if node: node_added.emit(node)
 
 # -- Applying Dicts and Inputs -- #
 
@@ -60,7 +63,7 @@ func apply_dict(dict: Dictionary) -> void:
 
 		# Get the node if there is one.
 		var node: Node = ls.init_node()
-		if node: NetworkBus.network_orchestrator.get_parent().add_child(node)
+		if node: node_added.emit(node)
 
 ## Applies an array of inputs.
 func apply_inputs(inputs: Array[Dictionary]) -> void:
@@ -127,6 +130,10 @@ func get_updated_dicts() -> Array[Dictionary]:
 ## This overwrites whatever was there before.
 func add_update(state_id: int, update: Dictionary) -> void:
 	updates[state_id] = update
+
+## Will tell the connected function to send all the current updates.
+@warning_ignore("unused_signal")
+signal send_updates()
 
 ## Array of updated LinkState ids.
 var updates: Dictionary[int, Dictionary] = {}

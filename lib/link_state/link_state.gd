@@ -18,12 +18,6 @@ func _init() -> void:
 
 # -- Input Tracking & Processing -- #
 
-## Tracks the last n updates of the LinkState.
-## Only holds potential queued inputs.
-var input_tracker: LinkStateInputTracker = LinkStateInputTracker.new(200)
-
-# ! Functions regarding inputs are defined in the link_states themselves.
-
 ## Listens whether a new input has been done for this LinkState.
 ## If so will emit the local_state_change signal.
 func _new_input() -> void:
@@ -33,6 +27,12 @@ func _new_input() -> void:
 ## Only called from the authority where client inputs are the incoming packets.
 @abstract
 func apply_input(input: Dictionary) -> void
+
+## Tracks the last n updates of the LinkState.
+## Only holds potential queued inputs.
+var input_tracker: LinkStateInputTracker = LinkStateInputTracker.new(200)
+
+# ! Functions regarding inputs are defined in the link_states themselves.
 
 # -- Signals -- #
 
@@ -48,7 +48,7 @@ signal external_state_change(ls: LinkState)
 @warning_ignore("unused_signal")
 signal local_state_change(ls: LinkState)
 
-# -- Methods -- #
+# -- State Alteration & Updates -- #
 
 ## Will turn the LinkState into a dictionary that can be sent over the network.
 @abstract
@@ -59,15 +59,17 @@ func to_dict() -> Dictionary
 @abstract
 func apply_dict(dict: Dictionary) -> void
 
+## Returns everything the outside needs to update themselves.
 @abstract 
 func get_update() -> Dictionary
+
 
 ## Will initialize the node linked to this state.
 ## When no node is linked to the state this does nothing.
 func init_node() -> Node:
 	return null
 
-# -- States -- #
+# -- ALL STATES -- #
 
 static var STATES: Dictionary[StringName, GDScript] = {
 	"EntityLinkState": EntityLinkState

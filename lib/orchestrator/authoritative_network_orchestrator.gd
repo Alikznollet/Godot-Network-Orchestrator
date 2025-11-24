@@ -22,6 +22,11 @@ class_name AuthoritativeNetworkOrchestrator
 ## When this timer sends a timeout the state is sent to all clients.
 var update_timer: Timer
 
+# -- Initialization -- #
+
+func _init() -> void:
+	game_state = AuthoritativeGameState.new()
+
 func _ready() -> void:
 	# This is supposed to be replaced with SteamMultiplayerPeer when used in a game.
 	# The rest roughly stays the same.
@@ -41,7 +46,7 @@ func _ready() -> void:
 
 	update_timer.start()
 
-	game_state = AuthoritativeGameState.new()
+# -- Sending & Receiving -- #
 
 ## Send the authoritative state to all connected peers.
 func send_state() -> void:
