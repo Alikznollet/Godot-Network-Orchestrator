@@ -8,12 +8,15 @@ class_name AuthoritativeGameState
 ## A local change for the authority means the authority altered it's own state.
 ## We can treat this just like an external change.
 func local_change(ls: LinkState) -> void:
-	# TODO: Make the authority handle it's own inputs correctly.
-	# Force the authority to update immediately after a local change.
-	ls.update.emit()
-	add_update(ls)
+	# Apply any input made by the authority directly to the state.
+	# Apply_input will then trigger an external_change signal.
+	ls.apply_input(ls.input_tracker.get_latest_input())
 
 ## This won't be called because on the server we will be handling inputs from clients not states.
-func external_change(_ls: LinkState) -> void:
-	# TODO: Make the authority receive and handle inputs from the clients correctly.
-	pass
+func external_change(ls: LinkState) -> void:
+	# Update the local View
+	# apply_input() will choose if the input gets accepted or not.
+	ls.update.emit()
+
+	# Send the whole state altered back to the clients
+	add_update(ls.id, ls.to_dict())

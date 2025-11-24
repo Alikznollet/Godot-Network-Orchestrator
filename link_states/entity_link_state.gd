@@ -14,6 +14,14 @@ func move(direction: Vector2) -> void:
 	var input: Dictionary = { "direction": direction }
 	input_tracker.add_input(input)
 
+func apply_input(input: Dictionary) -> void:
+	# TODO: Check here whether the input is valid
+	global_position += input.direction
+
+	# Update the input id and emit an external state change.
+	last_input_id = input.input_id
+	external_state_change.emit(self)
+
 # -- -- #
 
 func to_dict() -> Dictionary:
@@ -24,7 +32,12 @@ func to_dict() -> Dictionary:
 
 func apply_dict(dict: Dictionary) -> void:
 	owner_pid = dict.owner_pid
-	global_position = dict.global_position
+
+	input_tracker.acknowledge_input(dict.ack_input_id)
+
+	# TODO: Implement Server Reconciliation (simulate all non acknowledged inputs).
+	var pos: Vector2 = dict.global_position
+	global_position = pos
 
 	external_state_change.emit(self)
 

@@ -17,17 +17,17 @@ func _init(i_max_tracked: int) -> void:
 # -- Inputs -- #
 
 ## The track_id of the element at position 0 in the inputs array.
-var track_id_at_zero: int = 0
+var input_id_base: int = 0
 
 ## Array of inputs, acts as a moving window over the track_ids.
 var inputs: Array[Dictionary] = []
 
 ## Adds an input to the tracked inputs.
 ## If the buffer is not yet overflowing will just add it at the end.
-## If the buffer starts overflowing increments track_id_at_zero with one and throws away the first added value.
+## If the buffer starts overflowing increments input_id_base with one and throws away the first added value.
 func add_input(input: Dictionary) -> void:
 	if len(inputs) >= max_tracked:
-		track_id_at_zero += 1
+		input_id_base += 1
 		inputs.pop_front()
 	
 	inputs.push_back(input)
@@ -37,16 +37,16 @@ func add_input(input: Dictionary) -> void:
 func get_latest_input() -> Dictionary:
 	var buf_id: int = len(inputs)-1
 	var input: Dictionary = inputs[buf_id]
-	var track_id: int = track_id_at_zero + buf_id
+	var input_id: int = input_id_base + buf_id
 
-	input["track_id"] = track_id
+	input["input_id"] = input_id
 
 	return input
 
 ## Acknowledges inputs up to track_id.
 ## Then returns all non-acknowledged inputs.
 func acknowledge_input(track_id: int) -> Array[Dictionary]:
-	var diff: int = track_id - track_id_at_zero
+	var diff: int = track_id - input_id_base
 
 	# Diff smaller than 0 means no inputs were acknowledged by the server that are in the buffer.
 	if diff < 0: return []

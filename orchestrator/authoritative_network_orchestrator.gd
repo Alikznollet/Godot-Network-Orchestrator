@@ -52,6 +52,5 @@ func send_state() -> void:
 
 ## Receive client states from all connected peers.
 ## Check them for legitimacy and then apply them to the authoritative state.
-func receive_state(updates: Array[Dictionary]) -> void:
-	# TODO: Apply the needed checks here to check for client state correctness.
-	game_state.apply_dicts(updates)
+func receive_state(inputs: Array[Dictionary]) -> void:
+	game_state.apply_inputs(inputs)

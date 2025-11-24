@@ -26,7 +26,7 @@ func add_state(ls: LinkState) -> void:
 	ls.local_state_change.connect(local_change)
 	ls.external_state_change.connect(external_change)
 
-	updates.append(id)
+	add_update(id, ls.to_dict())
 
 ## Will apply a list of dictionaries of LinkStates.
 func apply_dicts(dicts: Array[Dictionary]) -> void:
@@ -36,20 +36,20 @@ func apply_dicts(dicts: Array[Dictionary]) -> void:
 ## Applies a LinkState to the correctly mapped one in link_states.
 func apply_dict(dict: Dictionary) -> void:
 	# Check whether the dictionary has the required fields.
-	assert(dict.has("id"), "GameState: LinkState dictionary does not have 'id' field.")
+	assert(dict.has("state_id"), "GameState: LinkState dictionary does not have 'id' field.")
 	assert(dict.has("type"), "GameState: LinkState dictionary does not have 'type' field.")
 
 	# If the id already has a LinkState
-	if link_states.has(dict.id):
-		var ls: LinkState = link_states[dict.id]
+	if link_states.has(dict.state_id):
+		var ls: LinkState = link_states[dict.state_id]
 		ls.apply_dict(dict)
 	else:
 		assert(LinkState.STATES.has(dict.type), "GameState: LinkState.STATES does not have an entry for %s." % dict.type)
 		var ls: LinkState = LinkState.STATES[dict.type].new()
-		ls.id = dict.id
+		ls.id = dict.state_id
 		ls.apply_dict(dict)
 		ls.init_state()
-		link_states[dict.id] = ls
+		link_states[dict.state_id] = ls
 		ls.local_state_change.connect(local_change)
 		ls.external_state_change.connect(external_change)
 	
@@ -87,21 +87,35 @@ func local_change(ls: LinkState) -> void
 ## Reacts to a change from outside. Client -> Authority or other way around.
 func external_change(ls: LinkState) -> void
 
-## Returns an array of updated states as dictionaries and resets the updates variable.
+## Returns an array of updates with their ids inserted into the update dictionary.
 func get_updated_dicts() -> Array[Dictionary]:
 	var dicts: Array[Dictionary] = []
-	for id in updates:
-		var dict: Dictionary = get_dict_from_id(id)
+	for state_id in updates:
+		var dict: Dictionary = updates[state_id]
+		var ls: LinkState = link_states[state_id]
+		dict["state_id"] = state_id 
+		dict["type"] = ls.get_script().get_global_name()
+		dict["ack_input_id"] = ls.last_input_id
 		dicts.append(dict)
 
 	updates.clear()
 	return dicts
 
-## Adds a LinkState index to the updates array if it is not already in there.
-func add_update(ls: LinkState) -> void:
-	var id: int = ls.id
-	if not updates.has(id):
-		updates.append(id)
+## Adds an update linked to a state_id to the updates dictionary.
+## This overwrites whatever was there before.
+func add_update(state_id: int, update: Dictionary) -> void:
+	updates[state_id] = update
+
+## Applies an array of inputs.
+func apply_inputs(inputs: Array[Dictionary]) -> void:
+	for input in inputs:
+		apply_input(input)
+
+## Applies a single input to the corresponding LinkState.
+func apply_input(input: Dictionary) -> void:
+	var state_id: int = input.state_id
+	var ls: LinkState = link_states[state_id]
+	ls.apply_input(input)
 
 ## Array of updated LinkState ids.
-var updates: Array[int] = []
+var updates: Dictionary[int, Dictionary] = {}

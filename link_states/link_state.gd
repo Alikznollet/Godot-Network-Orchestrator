@@ -10,6 +10,9 @@ class_name LinkState
 ## ID is stored here and in the dictionary.
 var id: int
 
+## Exclusively used for authoritative state.
+var last_input_id: int = -1
+
 func _init() -> void:
 	input_tracker.new_input.connect(_new_input)
 
@@ -25,6 +28,11 @@ var input_tracker: LinkStateInputTracker = LinkStateInputTracker.new(200)
 ## If so will emit the local_state_change signal.
 func _new_input() -> void:
 	local_state_change.emit(self)
+
+## Applies an input dictionary.
+## Only called from the authority where client inputs are the incoming packets.
+@abstract
+func apply_input(input: Dictionary) -> void
 
 # -- Signals -- #
 
