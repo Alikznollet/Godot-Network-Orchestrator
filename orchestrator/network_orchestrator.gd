@@ -6,16 +6,6 @@ class_name NetworkOrchestrator
 func _init() -> void:
 	NetworkBus.network_orchestrator = self
 
-# -- Settings -- #
-
-@export var enable_prediction: bool
-
-@export var enable_reconciliation: bool
-
-@export var enable_interpolation: bool
-
-@export var enable_lag_compensation: bool
-
 ## Multiplayer peer used to rpc the other peers.
 var peer: ENetMultiplayerPeer
 
