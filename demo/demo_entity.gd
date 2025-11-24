@@ -13,7 +13,7 @@ func update() -> void:
 	var upd: Dictionary = link_state.get_update()
 	global_position = upd.position
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	var vector: Vector2 = Input.get_vector("left", "right", "up", "down")
 
 	if vector.length() != 0 and link_state.owner_pid == multiplayer.get_unique_id():

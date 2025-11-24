@@ -26,8 +26,8 @@ var input_tracker: LinkStateInputTracker = LinkStateInputTracker.new(200)
 
 ## Listens whether a new input has been done for this LinkState.
 ## If so will emit the local_state_change signal.
-func _new_input() -> void:
-	local_state_change.emit(self)
+func _new_input(input: Dictionary) -> void:
+	local_state_change.emit(self, input)
 
 ## Applies an input dictionary.
 ## Only called from the authority where client inputs are the incoming packets.
@@ -46,7 +46,7 @@ signal external_state_change(ls: LinkState)
 
 ## Broadcasted whenever the state receives a proposed change.
 @warning_ignore("unused_signal")
-signal local_state_change(ls: LinkState)
+signal local_state_change(ls: LinkState, input: Dictionary)
 
 # -- Methods -- #
 

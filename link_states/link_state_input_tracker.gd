@@ -4,7 +4,7 @@ class_name LinkStateInputTracker
 
 # -- Signals -- #
 
-signal new_input()
+signal new_input(input: Dictionary)
 
 # -- Initialization -- #
 
@@ -30,8 +30,12 @@ func add_input(input: Dictionary) -> void:
 		input_id_base += 1
 		inputs.pop_front()
 	
+	var buf_id: int = len(inputs)
+	var input_id: int = input_id_base + buf_id
+	input["input_id"] = input_id
+
 	inputs.push_back(input)
-	new_input.emit()
+	new_input.emit(input)
 
 ## Will return the latest input together with it's tracking id.
 func get_latest_input() -> Dictionary:
@@ -53,7 +57,7 @@ func acknowledge_input(track_id: int) -> void:
 
 	# Slice is exclusive so we add one. We cut off the acknowledged part.
 	inputs = inputs.slice(diff+1, len(inputs))
-	input_id_base += diff
+	input_id_base = track_id + 1
 
 
 

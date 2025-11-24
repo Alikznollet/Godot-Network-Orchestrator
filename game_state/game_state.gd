@@ -81,7 +81,7 @@ func get_dict_from_id(id: int) -> Dictionary:
 
 @abstract
 ## Reacts to a local change of any LinkState.
-func local_change(ls: LinkState) -> void
+func local_change(ls: LinkState, input: Dictionary) -> void
 
 @abstract
 ## Reacts to a change from outside. Client -> Authority or other way around.

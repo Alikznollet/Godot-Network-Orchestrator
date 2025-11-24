@@ -7,13 +7,19 @@ class_name ClientGameState
 
 ## A local change means an input was made by the user.
 ## We want to send this input to the server.
-func local_change(ls: LinkState) -> void:
+func local_change(ls: LinkState, input: Dictionary) -> void:
 	# When an input happens we immediately add it as an update and send it to the server.
-	var input: Dictionary = ls.input_tracker.get_latest_input()
 	add_update(ls.id, input)
+
+	if NetworkBus.enable_prediction:
+		ls.update.emit()
+	
 	NetworkBus.network_orchestrator.send_state()
 
 ## An external change means the authority forced us to update our local state.
 func external_change(ls: LinkState) -> void:
 	# We have received an authoritative state from the server so we just update.
 	ls.update.emit()
+
+	print("Incoming States client")
+	print(ls.to_dict())
