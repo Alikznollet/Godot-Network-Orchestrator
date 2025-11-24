@@ -7,12 +7,13 @@ class_name ClientGameState
 
 ## A local change means an input was made by the user.
 ## We want to send this input to the server.
-func local_change(ls: LinkState, input: Dictionary) -> void:
+func local_change(ls: LinkState) -> void:
 	# When an input happens we immediately add it as an update and send it to the server.
+	var input: Dictionary = ls.input_tracker.get_latest_input()
 	add_update(ls.id, input)
 
-	if NetworkBus.enable_prediction:
-		ls.update.emit()
+	## Immediately tell the client to update. This will trigger Client Prediction.
+	ls.update.emit()
 	
 	NetworkBus.network_orchestrator.send_state()
 

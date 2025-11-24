@@ -3,30 +3,36 @@ extends Resource
 class_name GameState
 ## Keeps track of the global state of the game.
 ##
-## Contains a dictionary of id -> LinkState.
-## These state objects all have a to_dict() and apply_dict().
+## Holds all states for objects and nodes in the game. 
+## Available functions include adding states (authority only recommended), applying changes
+## and registering updates.
 
 ## ID -> LinkState dictionary. Holds all possible update-able states.
 var link_states: Dictionary[int, LinkState] = {}
 
-# -- Adding & Applying -- #
+# -- Adding States -- #
 
 ## Adds a LinkState to the state dictionary.
-## This is to only be called from the authority.
+## This is to only be called from the authority. Though not enforced in here.
+## Optionally returns a node if one is linked to the state, otherwise just null.
 func add_state(ls: LinkState) -> void:
-	if NetworkBus.multiplayer.get_unique_id() != 1: print("GameState: Cannot add LinkState when not the authority."); return
-
 	# Generate a random id until it is not present.
 	var id := randi()
 	while link_states.has(id): id = randi()
 
+	# Link up the LinkState and then add it as an update.
 	link_states[id] = ls
 	ls.id = id
-	ls.init_state()
 	ls.local_state_change.connect(local_change)
 	ls.external_state_change.connect(external_change)
 
 	add_update(id, ls.to_dict())
+
+	# Return the node linked to the state if there is one.
+	var node: Node = ls.init_node()
+	if node: NetworkBus.network_orchestrator.get_parent().add_child(node)
+
+# -- Applying Dicts and Inputs -- #
 
 ## Will apply a list of dictionaries of LinkStates.
 func apply_dicts(dicts: Array[Dictionary]) -> void:
@@ -48,10 +54,26 @@ func apply_dict(dict: Dictionary) -> void:
 		var ls: LinkState = LinkState.STATES[dict.type].new()
 		ls.id = dict.state_id
 		ls.apply_dict(dict)
-		ls.init_state()
 		link_states[dict.state_id] = ls
 		ls.local_state_change.connect(local_change)
 		ls.external_state_change.connect(external_change)
+
+		# Get the node if there is one.
+		var node: Node = ls.init_node()
+		if node: NetworkBus.network_orchestrator.get_parent().add_child(node)
+
+## Applies an array of inputs.
+func apply_inputs(inputs: Array[Dictionary]) -> void:
+	for input in inputs:
+		apply_input(input)
+
+## Applies a single input to the corresponding LinkState.
+## Also updates the last_input_id field of the LinkState.
+func apply_input(input: Dictionary) -> void:
+	var state_id: int = input.state_id
+	var ls: LinkState = link_states[state_id]
+	ls.last_input_id = input.input_id
+	ls.apply_input(input)
 	
 # -- Getting Dictionaries -- #
 
@@ -81,7 +103,7 @@ func get_dict_from_id(id: int) -> Dictionary:
 
 @abstract
 ## Reacts to a local change of any LinkState.
-func local_change(ls: LinkState, input: Dictionary) -> void
+func local_change(ls: LinkState) -> void
 
 @abstract
 ## Reacts to a change from outside. Client -> Authority or other way around.
@@ -105,17 +127,6 @@ func get_updated_dicts() -> Array[Dictionary]:
 ## This overwrites whatever was there before.
 func add_update(state_id: int, update: Dictionary) -> void:
 	updates[state_id] = update
-
-## Applies an array of inputs.
-func apply_inputs(inputs: Array[Dictionary]) -> void:
-	for input in inputs:
-		apply_input(input)
-
-## Applies a single input to the corresponding LinkState.
-func apply_input(input: Dictionary) -> void:
-	var state_id: int = input.state_id
-	var ls: LinkState = link_states[state_id]
-	ls.apply_input(input)
 
 ## Array of updated LinkState ids.
 var updates: Dictionary[int, Dictionary] = {}

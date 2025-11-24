@@ -1,10 +1,12 @@
 extends Resource
 class_name LinkStateInputTracker
-## Keeps track of inputs on a LinkState
+## Keeps track of inputs on a LinkState.
+##
+## Inputs can be acknowledged by the authority and are then thrown away.
 
 # -- Signals -- #
 
-signal new_input(input: Dictionary)
+signal new_input()
 
 # -- Initialization -- #
 
@@ -35,17 +37,11 @@ func add_input(input: Dictionary) -> void:
 	input["input_id"] = input_id
 
 	inputs.push_back(input)
-	new_input.emit(input)
+	new_input.emit()
 
-## Will return the latest input together with it's tracking id.
+## Will return the latest performed input.
 func get_latest_input() -> Dictionary:
-	var buf_id: int = len(inputs)-1
-	var input: Dictionary = inputs[buf_id]
-	var input_id: int = input_id_base + buf_id
-
-	input["input_id"] = input_id
-
-	return input
+	return inputs.back()
 
 ## Acknowledges inputs up to track_id.
 ## Then returns all non-acknowledged inputs.

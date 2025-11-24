@@ -7,10 +7,12 @@ class_name AuthoritativeGameState
 
 ## A local change for the authority means the authority altered it's own state.
 ## We can treat this just like an external change.
-func local_change(ls: LinkState, input: Dictionary) -> void:
+func local_change(ls: LinkState) -> void:
 	# Apply any input made by the authority directly to the state.
 	# Apply_input will then trigger an external_change signal.
+	var input: Dictionary = ls.input_tracker.get_latest_input()
 	ls.apply_input(input)
+	
 	# Immediately ack the input.
 	ls.input_tracker.acknowledge_input(input.input_id)
 

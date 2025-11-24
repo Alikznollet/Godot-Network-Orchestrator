@@ -1,7 +1,7 @@
 @abstract
 extends Resource
 class_name LinkState
-## State of various objects
+## State of various objects or nodes.
 ##
 ## Used to update the objects this state is connected to via signaling.
 ## LinkState objects or nodes that contain LinkState objects can only be created
@@ -26,8 +26,8 @@ var input_tracker: LinkStateInputTracker = LinkStateInputTracker.new(200)
 
 ## Listens whether a new input has been done for this LinkState.
 ## If so will emit the local_state_change signal.
-func _new_input(input: Dictionary) -> void:
-	local_state_change.emit(self, input)
+func _new_input() -> void:
+	local_state_change.emit(self)
 
 ## Applies an input dictionary.
 ## Only called from the authority where client inputs are the incoming packets.
@@ -46,7 +46,7 @@ signal external_state_change(ls: LinkState)
 
 ## Broadcasted whenever the state receives a proposed change.
 @warning_ignore("unused_signal")
-signal local_state_change(ls: LinkState, input: Dictionary)
+signal local_state_change(ls: LinkState)
 
 # -- Methods -- #
 
@@ -64,8 +64,8 @@ func get_update() -> Dictionary
 
 ## Will initialize the node linked to this state.
 ## When no node is linked to the state this does nothing.
-func init_state() -> void:
-	pass
+func init_node() -> Node:
+	return null
 
 # -- States -- #
 

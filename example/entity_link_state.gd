@@ -18,8 +18,6 @@ func apply_input(input: Dictionary) -> void:
 	# TODO: Check here whether the input is valid
 	global_position += input.direction
 
-	# Update the input id and emit an external state change.
-	last_input_id = input.input_id
 	external_state_change.emit(self)
 
 # -- -- #
@@ -48,9 +46,7 @@ func get_update() -> Dictionary:
 		"position": pos
 	}
 
-func init_state() -> void:
+func init_node() -> Node:
 	var entity := DemoEntity.new()
 	entity.link_state = self
-	
-	# Adds it immediately to the place where it belongs.
-	NetworkBus.network_orchestrator.get_parent().add_child(entity)
+	return entity
