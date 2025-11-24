@@ -34,12 +34,19 @@ func apply_dict(dict: Dictionary) -> void:
 	owner_pid = dict.owner_pid
 
 	input_tracker.acknowledge_input(dict.ack_input_id)
-
-	# TODO: Implement Server Reconciliation (simulate all non acknowledged inputs).
-	var pos: Vector2 = dict.global_position
-	global_position = pos
+	global_position = dict.global_position
 
 	external_state_change.emit(self)
+
+func get_update() -> Dictionary:
+	var pos: Vector2 = global_position
+
+	for input in input_tracker.inputs:
+		pos += input.direction
+
+	return {
+		"position": pos
+	}
 
 func init_state() -> void:
 	var entity := DemoEntity.new()

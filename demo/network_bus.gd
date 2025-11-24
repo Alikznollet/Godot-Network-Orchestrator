@@ -5,6 +5,6 @@ extends Node
 var network_orchestrator: NetworkOrchestrator
 
 var enable_prediction: bool = true
-var enable_reconciliation: bool = false
+var enable_reconciliation: bool = true
 var enable_interpolation: bool = false
 var enable_lag_compensation: bool = false

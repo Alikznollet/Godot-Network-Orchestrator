@@ -10,7 +10,8 @@ func _ready() -> void:
 	link_state.update.connect(update)
 
 func update() -> void:
-	global_position = link_state.global_position
+	var upd: Dictionary = link_state.get_update()
+	global_position = upd.position
 
 func _process(delta: float) -> void:
 	var vector: Vector2 = Input.get_vector("left", "right", "up", "down")

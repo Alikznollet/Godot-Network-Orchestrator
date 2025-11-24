@@ -45,17 +45,15 @@ func get_latest_input() -> Dictionary:
 
 ## Acknowledges inputs up to track_id.
 ## Then returns all non-acknowledged inputs.
-func acknowledge_input(track_id: int) -> Array[Dictionary]:
+func acknowledge_input(track_id: int) -> void:
 	var diff: int = track_id - input_id_base
 
 	# Diff smaller than 0 means no inputs were acknowledged by the server that are in the buffer.
-	if diff < 0: return []
+	if diff < 0: return
 
 	# Slice is exclusive so we add one. We cut off the acknowledged part.
-	inputs = inputs.slice(0, diff+1)
-
-	# Then simulate all the inputs that were not 
-	return inputs
+	inputs = inputs.slice(diff+1, len(inputs))
+	input_id_base += diff
 
 
 

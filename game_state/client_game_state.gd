@@ -10,12 +10,6 @@ class_name ClientGameState
 func local_change(ls: LinkState) -> void:
 	# When an input happens we immediately add it as an update and send it to the server.
 	var input: Dictionary = ls.input_tracker.get_latest_input()
-
-	# If client side prediction is enabled we can apply the input immediately.
-	if NetworkBus.enable_prediction:
-		input["state_id"] = ls.id
-		apply_input(input)
-
 	add_update(ls.id, input)
 	NetworkBus.network_orchestrator.send_state()
 
