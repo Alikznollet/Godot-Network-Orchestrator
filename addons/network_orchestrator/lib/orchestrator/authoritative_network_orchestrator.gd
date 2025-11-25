@@ -1,3 +1,4 @@
+@tool
 extends NetworkOrchestrator
 class_name AuthoritativeNetworkOrchestrator
 ## The Authority in the network

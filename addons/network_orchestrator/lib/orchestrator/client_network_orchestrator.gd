@@ -1,3 +1,4 @@
+@tool
 extends NetworkOrchestrator
 class_name ClientNetworkOrchestrator
 ## A client in the network

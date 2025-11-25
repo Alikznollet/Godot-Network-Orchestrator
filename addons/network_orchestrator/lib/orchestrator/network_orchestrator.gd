@@ -1,3 +1,4 @@
+@tool
 @abstract
 extends Node
 class_name NetworkOrchestrator
