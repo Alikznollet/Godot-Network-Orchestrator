@@ -17,7 +17,10 @@ func _enter_tree() -> void:
 		preload("MultiplayerSynchronizer.svg")
 	)
 
+	add_autoload_singleton("LinkStateDB", "res://addons/network_orchestrator/lib/link_state/link_state_db.gd")
+
 func _exit_tree() -> void:
 	# Clean-up of the plugin goes here.
 	remove_custom_type("AuthoritativeNetworkOrchestrator")
 	remove_custom_type("ClientNetworkOrchestrator")
+	remove_autoload_singleton("LinkStateDB")

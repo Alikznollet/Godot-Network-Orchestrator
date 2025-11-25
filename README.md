@@ -40,6 +40,8 @@ There's also a few optional methods to override:
 
 An example of all of these implementations can be found in `res://example/entity_link_state.gd`.
 
+All user defined `LinkState` objects are automatically inserted into `LinkStateDB.STATES` with their `class_name` as the key.
+
 > [!IMPORTANT]
 > When overriding the _init() method of a `LinkState` make sure to call super._init(). Without this the input_tracker will not work correctly.
 

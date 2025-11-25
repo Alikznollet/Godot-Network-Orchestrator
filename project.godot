@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 NetworkBus="*res://example/network_bus.gd"
+LinkStateDB="*res://addons/network_orchestrator/lib/link_state/link_state_db.gd"
 
 [editor_plugins]
 

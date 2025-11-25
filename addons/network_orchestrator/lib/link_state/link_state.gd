@@ -67,9 +67,3 @@ func get_update() -> Dictionary
 ## When no node is linked to the state this does nothing.
 func init_node() -> Node:
 	return null
-
-# -- ALL STATES -- #
-
-static var STATES: Dictionary[StringName, GDScript] = {
-	"EntityLinkState": EntityLinkState
-}

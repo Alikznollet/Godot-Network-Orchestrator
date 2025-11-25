@@ -34,7 +34,7 @@ func _ready() -> void:
 
 	%UpdFreq.value_changed.connect(
 		func (val): 
-			NetworkBus.network_orchestrator.update_frequency = val
+			NetworkBus.network_orchestrator.target_update_frequency = val
 			%UpdFreqLabel.text = str(val)
 	)
 

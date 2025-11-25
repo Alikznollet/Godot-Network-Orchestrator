@@ -53,8 +53,8 @@ func apply_dict(dict: Dictionary) -> void:
 		var ls: LinkState = link_states[dict.state_id]
 		ls.apply_dict(dict)
 	else:
-		assert(LinkState.STATES.has(dict.type), "GameState: LinkState.STATES does not have an entry for %s." % dict.type)
-		var ls: LinkState = LinkState.STATES[dict.type].new()
+		assert(LinkStateDB.STATES.has(dict.type), "GameState: LinkState.STATES does not have an entry for %s." % dict.type)
+		var ls: LinkState = LinkStateDB.STATES[dict.type].new()
 		ls.id = dict.state_id
 		ls.apply_dict(dict)
 		link_states[dict.state_id] = ls
