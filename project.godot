@@ -20,10 +20,6 @@ config/icon="res://icon.svg"
 
 NetworkBus="*res://example/network_bus.gd"
 
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/network_orchestrator/plugin.cfg")
-
 [input]
 
 up={
