@@ -26,7 +26,7 @@ There can be **only one** `AuthoritativeNetworkOrchestrator` in a network, the o
 To create your own state that can be exchanged you can make a new GDScript file and extend `LinkState`. To share it with other Orchestrators in the network you'll add it to the tracked states by calling `orchestrator.game_state.add_state(state)`. To correctly work a `LinkState` needs to have the following methods:
 
 > [!IMPORTANT]
-> If any of below actions are omitted the state exhange will not work.
+> If any of below actions are omitted the state exchange will not work.
 
 - `to_dict()`: Converts the state to a dictionary that can be sent to others over rpc.
 - `apply_dict(dict)`: Will apply a dictionary created by `to_dict()` by updating the desired fields inside the state with what was in the dictionary. This is also required to call `input_tracker.acknowledge_input(dict.ack_input_id)` and then emit the `external_state_change` signal.
@@ -40,10 +40,13 @@ There's also a few optional methods to override:
 
 An example of all of these implementations can be found in `res://example/entity_link_state.gd`.
 
+> [!IMPORTANT]
+> When overriding the _init() method of a `LinkState` make sure to call super._init(). Without this the input_tracker will not work correctly.
+
 After defining the `LinkState` implementation you link it to whatever object you want to use it with (this can be only one, or more). Then connect the `update` signal to any function that can then call `get_update()` to apply the updates to the object.
 To have the state update you can just call whatever method you defined to perform input.
 
-An example of this can be found in `res://example/demo_entity.gd`.
+An example of this can be found in `res://example/demo_entity.gd` and of the whole scene in `res://example/demo.gd` and it's corresponding scene.
 
 That's all!
 

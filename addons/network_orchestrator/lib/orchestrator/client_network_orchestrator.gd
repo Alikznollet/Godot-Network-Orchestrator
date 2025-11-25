@@ -18,16 +18,6 @@ class_name ClientNetworkOrchestrator
 func _init() -> void:
 	game_state = ClientGameState.new()
 
-func _ready() -> void:
-	# Supposed to be replaced with SteamMultiplayerPeer in a real setting.
-	peer = ENetMultiplayerPeer.new()
-
-	# In a real setting this error should be handled gracefully.
-	var status := peer.create_client("127.0.0.1", 9999)
-	assert(status == OK, "ClientNetworkOrchestrator: Could not connect to local server. Status: %d" % status)
-
-	multiplayer.multiplayer_peer = peer
-
 # -- Sending & Receiving -- #
 
 ## Send the client state to the authority.

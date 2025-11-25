@@ -4,9 +4,6 @@ extends Node
 class_name NetworkOrchestrator
 ## Abstract interface defining a couple of important networking functions.
 
-## Multiplayer peer used to rpc the other peers.
-var peer: ENetMultiplayerPeer
-
 ## The current (authoritative/client) state of the game, depending on the type of Orchestrator.
 var game_state: GameState:
 	set(new_game_state):

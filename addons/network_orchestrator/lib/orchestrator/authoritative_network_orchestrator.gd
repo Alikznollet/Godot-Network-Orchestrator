@@ -29,16 +29,6 @@ func _init() -> void:
 	game_state = AuthoritativeGameState.new()
 
 func _ready() -> void:
-	# This is supposed to be replaced with SteamMultiplayerPeer when used in a game.
-	# The rest roughly stays the same.
-	peer = ENetMultiplayerPeer.new()
-
-	# This status should be handled gracefully in a real setting
-	var status := peer.create_server(9999)
-	assert(status == OK, "AuthoritativeNetworkOrchestrator: Could not start server. Status: %d" % status)
-
-	multiplayer.multiplayer_peer = peer
-
 	# Set up the timer that will be used to send updates.
 	update_timer = Timer.new()
 	update_timer.wait_time = 1./target_update_frequency
