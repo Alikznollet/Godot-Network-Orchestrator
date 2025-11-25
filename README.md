@@ -1,4 +1,4 @@
-# NetworkOrchestrator
+# Godot Network Orchestrator
 
 Godot plugin that makes fast-paced multiplayer networking easier to implement and manage. 
 
