@@ -10,11 +10,11 @@ config_version=5
 
 [application]
 
-config/name="NetworkOrchestrator Demo"
-config/tags=PackedStringArray("module")
+config/name="NetworkOrchestrator"
+config/tags=PackedStringArray("plugin")
 run/main_scene="uid://c6mrde8vaoprr"
 config/features=PackedStringArray("4.5", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://bydf1d4gigs1"
 
 [autoload]
 
