@@ -53,10 +53,11 @@ To have the state update you can just call whatever method you defined to perfor
 
 An example of this can be found in `res://example/demo_entity.gd` and of the whole scene in `res://example/demo.gd` and it's corresponding scene.
 
+When a `LinkState` is linked to a node the `node_added` signal of the dedicated orchestrator will be emitted. This signal can be caught and then the node can be tested and sorted into the correct place.
+
 That's all!
 
 ## TODO
 
-- Write Documentation on how to use the Module.
 - Implement Entity interpolation.
 - Implement Lag Compensation.
