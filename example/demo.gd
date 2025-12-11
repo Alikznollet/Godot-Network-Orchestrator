@@ -1,5 +1,7 @@
 extends Node2D
 
+var entities: Array[DemoEntity] = []
+
 func _ready() -> void:
 	var args = OS.get_cmdline_args()
 	var parsed := {}
@@ -20,13 +22,17 @@ func _ready() -> void:
 					setup_server_peer()
 
 					NetworkBus.network_orchestrator = AuthoritativeNetworkOrchestrator.new()
+					NetworkBus.network_orchestrator.node_added.connect(_node_added)
 					multiplayer.peer_connected.connect(peer_connected)
+
 					add_child(NetworkBus.network_orchestrator)
 					peer_connected(1) # Connect the host themselves
 				else:
 					setup_client_peer()
 
 					NetworkBus.network_orchestrator = ClientNetworkOrchestrator.new()
+					NetworkBus.network_orchestrator.node_added.connect(_node_added)
+					
 					add_child(NetworkBus.network_orchestrator)
 					%UpdFreq.editable = false
 
@@ -42,6 +48,12 @@ func _ready() -> void:
 		func (val):
 			if NetworkBus.network_orchestrator is ClientNetworkOrchestrator: NetworkBus.network_orchestrator.artificial_lag = int(val)
 	)
+
+## Triggered whenever the Orchestrator emits the node_added signal.
+func _node_added(node: Node) -> void:
+	if node is DemoEntity:
+		entities.append(node)
+		add_child(node)
 
 ## Add an Entity for each peer that is connected.
 func peer_connected(id: int):

@@ -12,10 +12,15 @@ var game_state: GameState:
 			game_state.send_updates.connect(send_state)
 			game_state.node_added.connect(_add_node)
 
-## Adds a node to the parent of the orchestrator. Triggered by the node_added signal in GameState.
-## If the node needs to easily be retrieved again groups could be nice.
+# -- Node adding -- #
+
+## Signal that notifies the outside a node was added via LinkState. 
+## This node can be tested for what it is with the 'is' keyword.
+signal node_added(node: Node)
+
+## Emits the node_added signal to emit the node itself.
 func _add_node(node: Node) -> void:
-	get_parent().add_child(node)
+	node_added.emit(node)
 
 @abstract
 func send_state() -> void
