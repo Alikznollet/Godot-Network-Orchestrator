@@ -16,6 +16,15 @@ var last_input_id: int = -1
 func _init() -> void:
 	input_tracker.new_input.connect(_new_input)
 
+# -- Removal -- #
+
+## Emitted when the LinkState is told to be unlinked.
+signal unlinked()
+
+## Called by the GameState when the LinkState is unlinked.
+func unlink() -> void:
+	unlinked.emit()
+
 # -- Input Tracking & Processing -- #
 
 ## Listens whether a new input has been done for this LinkState.

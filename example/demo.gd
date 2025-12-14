@@ -1,6 +1,6 @@
 extends Node2D
 
-var entities: Array[DemoEntity] = []
+var entities: Dictionary[int, DemoEntity] = {}
 
 func _ready() -> void:
 	var args = OS.get_cmdline_args()
@@ -35,6 +35,7 @@ func _ready() -> void:
 					
 					add_child(NetworkBus.network_orchestrator)
 					%UpdFreq.editable = false
+					%Unlink.disabled = true
 
 	# -- Links for buttons -- #
 
@@ -52,8 +53,13 @@ func _ready() -> void:
 ## Triggered whenever the Orchestrator emits the node_added signal.
 func _node_added(node: Node) -> void:
 	if node is DemoEntity:
-		entities.append(node)
+		entities[node.link_state.owner_pid] = node
+		node.destroyed.connect(_entity_destroyed)
 		add_child(node)
+
+## Whenever an entity is supposed to be destroyed.
+func _entity_destroyed(entity: DemoEntity) -> void:
+	entities.erase(entity.link_state.owner_pid)
 
 ## Add an Entity for each peer that is connected.
 func peer_connected(id: int):
@@ -61,7 +67,7 @@ func peer_connected(id: int):
 	els.owner_pid = id
 	els.global_position = Vector2.ZERO
 
-	NetworkBus.network_orchestrator.game_state.add_state(els)
+	NetworkBus.network_orchestrator.game_state.link_state(els)
 
 ## Sets up a single P2P server on port 9999.
 func setup_server_peer():
@@ -85,3 +91,7 @@ func setup_client_peer():
 	multiplayer.multiplayer_peer = peer
 
 	await multiplayer.connected_to_server
+
+func _on_unlink_pressed() -> void:
+	var ls: LinkState = entities[multiplayer.get_unique_id()].link_state
+	NetworkBus.network_orchestrator.game_state.unlink_state(ls)

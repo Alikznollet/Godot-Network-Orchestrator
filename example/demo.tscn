@@ -51,3 +51,15 @@ offset_right = 1137.0
 offset_bottom = 26.0
 text = "0"
 horizontal_alignment = 2
+
+[node name="Unlink" type="Button" parent="CanvasLayer"]
+unique_name_in_owner = true
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -8.0
+offset_right = 8.0
+grow_vertical = 0
+text = "Unlink"
+
+[connection signal="pressed" from="CanvasLayer/Unlink" to="." method="_on_unlink_pressed"]

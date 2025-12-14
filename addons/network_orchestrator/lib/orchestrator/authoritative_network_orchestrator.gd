@@ -37,6 +37,10 @@ func _ready() -> void:
 
 	update_timer.start()
 
+# -- Altering the GameState -- #
+
+# TODO: When altering the game state use functions here.
+
 # -- Sending & Receiving -- #
 
 ## Send the authoritative state to all connected peers.
