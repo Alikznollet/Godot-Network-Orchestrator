@@ -37,6 +37,18 @@ func _ready() -> void:
 
 	update_timer.start()
 
+# -- Altering the GameState -- #
+
+## Links a state to the current GameState.
+func link_state(ls: LinkState) -> void:
+	assert(game_state, "AuthoritativeNetworkOrchestrator: No Game state found to link the LinkState to.")
+	game_state.link_state(ls)
+
+## Unlinks a state from the current GameState.
+func unlink_state(ls: LinkState) -> void:
+	assert(game_state, "AuthoritativeNetworkOrchestrator: No Game state found to link the LinkState to.")
+	game_state.unlink_state(ls)
+
 # -- Sending & Receiving -- #
 
 ## Send the authoritative state to all connected peers.

@@ -41,15 +41,15 @@ There's also a few optional methods to override:
 - `init_node()`: Return a brand new node of the type this state is meant for.
 - Any Method that will create an `input` and then add it to the state by calling `input_tracker.add_input(input)`.
 
-An example of all of these implementations can be found in `res://example/entity_link_state.gd`.
-
-All user defined `LinkState` objects are automatically inserted into `LinkStateDB.STATES` with their `class_name` as the key.
+An example of all of these implementations can be found in `res://example/entity_link_state.gd`. A `LinkState` takes an optional size for the `input window`. This defines how many inputs can be cached at one time.
 
 > [!IMPORTANT]
 > When overriding the _init() method of a `LinkState` make sure to call super._init(). Without this the input_tracker will not work correctly.
 
-After defining the `LinkState` implementation you link it to whatever object you want to use it with (this can be only one, or more). Then connect the `update` signal to any function that can then call `get_update()` to apply the updates to the object.
+After defining the `LinkState` implementation you link it to whatever object you want to use it with (this can be only one, or more). Then connect the `update` signal to any function that can then call `get_update()` to apply the updates to the object. Updates can also just be applied every physics loop, for things that require `move_and_slide()` for example.
 To have the state update you can just call whatever method you defined to perform input.
+
+To add a state to the world we can *link* and *unlink* it by calling the respective methods on the `AuthoritativeNetworkOrchestrator`.
 
 An example of this can be found in `res://example/demo_entity.gd` and of the whole scene in `res://example/demo.gd` and it's corresponding scene.
 

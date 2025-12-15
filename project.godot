@@ -19,7 +19,7 @@ config/icon="uid://bydf1d4gigs1"
 [autoload]
 
 NetworkBus="*res://example/network_bus.gd"
-LinkStateDB="*res://addons/network_orchestrator/lib/link_state/link_state_db.gd"
+LinkStateDB="*res://addons/network_orchestrator/lib/link_state/link_state_registry.gd"
 
 [editor_plugins]
 
