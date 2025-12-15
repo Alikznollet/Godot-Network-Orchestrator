@@ -1,5 +1,7 @@
 extends Node2D
 
+var orchestrator: NetworkOrchestrator
+
 var entities: Dictionary[int, DemoEntity] = {}
 
 func _ready() -> void:
@@ -21,19 +23,19 @@ func _ready() -> void:
 				if value == "yes":
 					setup_server_peer()
 
-					NetworkBus.network_orchestrator = AuthoritativeNetworkOrchestrator.new()
-					NetworkBus.network_orchestrator.node_added.connect(_node_added)
+					orchestrator = AuthoritativeNetworkOrchestrator.new()
+					orchestrator.node_added.connect(_node_added)
 					multiplayer.peer_connected.connect(peer_connected)
 
-					add_child(NetworkBus.network_orchestrator)
+					add_child(orchestrator)
 					peer_connected(1) # Connect the host themselves
 				else:
 					setup_client_peer()
 
-					NetworkBus.network_orchestrator = ClientNetworkOrchestrator.new()
-					NetworkBus.network_orchestrator.node_added.connect(_node_added)
+					orchestrator = ClientNetworkOrchestrator.new()
+					orchestrator.node_added.connect(_node_added)
 					
-					add_child(NetworkBus.network_orchestrator)
+					add_child(orchestrator)
 					%UpdFreq.editable = false
 					%Unlink.disabled = true
 
@@ -41,13 +43,13 @@ func _ready() -> void:
 
 	%UpdFreq.value_changed.connect(
 		func (val): 
-			NetworkBus.network_orchestrator.target_update_frequency = val
+			orchestrator.target_update_frequency = val
 			%UpdFreqLabel.text = str(val)
 	)
 
 	%ArtificialLag.text_changed.connect(
 		func (val):
-			if NetworkBus.network_orchestrator is ClientNetworkOrchestrator: NetworkBus.network_orchestrator.artificial_lag = int(val)
+			if orchestrator is ClientNetworkOrchestrator: orchestrator.artificial_lag = int(val)
 	)
 
 ## Triggered whenever the Orchestrator emits the node_added signal.
@@ -67,7 +69,8 @@ func peer_connected(id: int):
 	els.owner_pid = id
 	els.global_position = Vector2.ZERO
 
-	NetworkBus.network_orchestrator.game_state.link_state(els)
+	if orchestrator is AuthoritativeNetworkOrchestrator:
+		orchestrator.link_state(els)
 
 ## Sets up a single P2P server on port 9999.
 func setup_server_peer():
@@ -94,4 +97,5 @@ func setup_client_peer():
 
 func _on_unlink_pressed() -> void:
 	var ls: LinkState = entities[multiplayer.get_unique_id()].link_state
-	NetworkBus.network_orchestrator.game_state.unlink_state(ls)
+	if orchestrator is AuthoritativeNetworkOrchestrator:
+		orchestrator.unlink_state(ls)
