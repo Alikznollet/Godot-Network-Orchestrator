@@ -1,12 +1,6 @@
 @tool
 extends EditorPlugin
 
-func _enable_plugin() -> void:
-	add_autoload_singleton("LinkStateDB", "res://addons/network_orchestrator/lib/link_state/link_state_db.gd")
-
-func _disable_plugin() -> void:
-	remove_autoload_singleton("LinkStateDB")
-
 func _enter_tree() -> void:
 	# Initialization of the plugin goes here.
 	add_custom_type(

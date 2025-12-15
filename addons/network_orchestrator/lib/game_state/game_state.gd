@@ -64,21 +64,19 @@ func apply_dict(dict: Dictionary) -> void:
 		return
 
 	# Check whether the dictionary has the required fields.
-	assert(dict.has("type"), "GameState: LinkState dictionary does not have 'type' field.")
+	assert(dict.has("link_type"), "GameState: LinkState dictionary does not have 'link_type' field.")
 
 	# If the id already has a LinkState
 	if link_states.has(dict.link_id):
 		var ls: LinkState = link_states[dict.link_id]
 		ls.apply_dict(dict)
 	else:
-		assert(LinkStateDB.STATES.has(dict.type), "GameState: LinkState.STATES does not have an entry for %s." % dict.type)
-		var ls: LinkState = LinkStateDB.STATES[dict.type].new()
+		var ls: LinkState = LinkStateRegistry.get_script_from_id(dict["link_type"]).new()
 		ls.id = dict.link_id
 		ls.apply_dict(dict)
 		link_states[dict.link_id] = ls
 		ls.local_state_change.connect(local_change)
 		ls.external_state_change.connect(external_change)
-
 		# Get the node if there is one.
 		var node: Node = ls.init_node()
 		if node: node_added.emit(node)
@@ -116,7 +114,7 @@ func get_dict_from_id(id: int) -> Dictionary:
 	var dict := ls.to_dict()
 
 	dict["id"] = id
-	dict["type"] = ls.get_script().get_global_name()
+	dict["link_type"] = LinkStateRegistry.get_id(ls.get_script())
 
 	return dict
 
@@ -140,7 +138,7 @@ func get_updated_dicts() -> Array[Dictionary]:
 		# This means the state is still linked.
 		if not dict.has("unlinked"): 
 			var ls: LinkState = link_states[link_id]
-			dict["type"] = ls.get_script().get_global_name()
+			dict["link_type"] = LinkStateRegistry.get_id(ls.get_script())
 			dict["ack_input_id"] = ls.last_input_id
 		
 		dicts.append(dict)

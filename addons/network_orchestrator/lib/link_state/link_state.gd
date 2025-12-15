@@ -13,7 +13,12 @@ var id: int
 ## Exclusively used for authoritative state.
 var last_input_id: int = -1
 
-func _init() -> void:
+## Requires the user to pass the size of the input buffer. Uses a buffer of 200 inputs by default.
+## Window size always needs to be an integer larger than 0.
+func _init(input_window_size: int = 200) -> void:
+	assert(input_window_size > 0, "LinkState: Size of the input window should be an integer larger than 0.")
+	
+	input_tracker = LinkStateInputTracker.new(input_window_size)
 	input_tracker.new_input.connect(_new_input)
 
 # -- Removal -- #
@@ -39,7 +44,7 @@ func apply_input(input: Dictionary) -> void
 
 ## Tracks the last n updates of the LinkState.
 ## Only holds potential queued inputs.
-var input_tracker: LinkStateInputTracker = LinkStateInputTracker.new(200)
+var input_tracker: LinkStateInputTracker
 
 # ! Functions regarding inputs are defined in the link_states themselves.
 
