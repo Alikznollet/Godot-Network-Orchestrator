@@ -9,7 +9,7 @@ class_name ClientGameState
 ## We want to send this input to the server.
 func local_change(ls: LinkedState) -> void:
 	# When an input happens we immediately add it as an update and send it to the server.
-	var input: Dictionary = ls.input_tracker.get_latest_input()
+	var input: Dictionary = ls.input_buffer.get_latest_input()
 	add_update(ls.id, input)
 
 	## Immediately tell the client to update. This will trigger Client Prediction.

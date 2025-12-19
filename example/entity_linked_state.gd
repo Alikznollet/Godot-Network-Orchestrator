@@ -12,7 +12,7 @@ var global_position: Vector2
 ## Move in a certain direction
 func move(direction: Vector2) -> void:
 	var input: Dictionary = { "direction": direction }
-	input_tracker.add_input(input)
+	input_buffer.add_input(input)
 
 ## Apply an input dictionary to the LinkedState.
 func apply_input(input: Dictionary) -> void:
@@ -33,7 +33,7 @@ func to_dict() -> Dictionary:
 func apply_dict(dict: Dictionary) -> void:
 	owner_pid = dict.owner_pid
 
-	input_tracker.acknowledge_input(dict.ack_input_id)
+	input_buffer.acknowledge_input(dict.ack_input_id)
 	global_position = dict.global_position
 
 	external_state_change.emit(self)
@@ -42,7 +42,7 @@ func apply_dict(dict: Dictionary) -> void:
 func get_update() -> Dictionary:
 	var pos: Vector2 = global_position
 
-	for input in input_tracker.inputs:
+	for input in input_buffer.inputs:
 		pos += input.direction
 
 	return {

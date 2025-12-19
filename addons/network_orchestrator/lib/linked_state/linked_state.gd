@@ -18,8 +18,8 @@ var last_input_id: int = -1
 func _init(input_window_size: int = 200) -> void:
 	assert(input_window_size > 0, "LinkedState: Size of the input window should be an integer larger than 0.")
 	
-	input_tracker = LinkStateInputTracker.new(input_window_size)
-	input_tracker.new_input.connect(_new_input)
+	input_buffer = LinkedStateInputBuffer.new(input_window_size)
+	input_buffer.new_input.connect(_new_input)
 
 # -- Removal -- #
 
@@ -45,7 +45,7 @@ func apply_input(input: Dictionary) -> void
 
 ## Tracks the last n updates of the LinkedState.
 ## Only holds potential queued inputs.
-var input_tracker: LinkStateInputTracker
+var input_buffer: LinkedStateInputBuffer
 
 # ! Functions regarding inputs are defined in the link_states themselves.
 

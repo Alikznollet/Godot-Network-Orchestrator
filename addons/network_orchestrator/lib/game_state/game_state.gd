@@ -71,7 +71,7 @@ func apply_dict(dict: Dictionary) -> void:
 		var ls: LinkedState = linked_states[dict.link_id]
 		ls.apply_dict(dict)
 	else:
-		var ls: LinkedState = LinkStateRegistry.get_script_from_id(dict["link_type"]).new()
+		var ls: LinkedState = LinkedStateRegistry.get_script_from_id(dict["link_type"]).new()
 		ls.id = dict.link_id
 		ls.apply_dict(dict)
 		linked_states[dict.link_id] = ls
@@ -115,7 +115,7 @@ func get_dict_from_id(id: int) -> Dictionary:
 	var dict := ls.to_dict()
 
 	dict["link_id"] = id
-	dict["link_type"] = LinkStateRegistry.get_id(ls.get_script())
+	dict["link_type"] = LinkedStateRegistry.get_id(ls.get_script())
 	dict["ack_input_id"] = ls.last_input_id
 
 	return dict
@@ -140,7 +140,7 @@ func get_updated_dicts() -> Array[Dictionary]:
 		# This means the state is still linked.
 		if not dict.has("unlinked"): 
 			var ls: LinkedState = linked_states[link_id]
-			dict["link_type"] = LinkStateRegistry.get_id(ls.get_script())
+			dict["link_type"] = LinkedStateRegistry.get_id(ls.get_script())
 			dict["ack_input_id"] = ls.last_input_id
 		
 		dicts.append(dict)

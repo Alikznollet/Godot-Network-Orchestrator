@@ -10,11 +10,11 @@ class_name AuthoritativeGameState
 func local_change(ls: LinkedState) -> void:
 	# Apply any input made by the authority directly to the state.
 	# Apply_input will then trigger an external_change signal.
-	var input: Dictionary = ls.input_tracker.get_latest_input()
+	var input: Dictionary = ls.input_buffer.get_latest_input()
 	ls.apply_input(input)
 	
 	# Immediately ack the input.
-	ls.input_tracker.acknowledge_input(input.input_id)
+	ls.input_buffer.acknowledge_input(input.input_id)
 
 ## This won't be called because on the server we will be handling inputs from clients not states.
 func external_change(ls: LinkedState) -> void:

@@ -96,6 +96,6 @@ func setup_client_peer():
 	await multiplayer.connected_to_server
 
 func _on_unlink_pressed() -> void:
-	var ls: LinkedState = entities[multiplayer.get_unique_id()].link_state
+	var ls: LinkedState = entities[multiplayer.get_unique_id()].linked_state
 	if orchestrator is AuthoritativeNetworkOrchestrator:
 		orchestrator.unlink_state(ls)
