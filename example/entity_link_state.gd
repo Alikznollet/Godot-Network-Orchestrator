@@ -46,7 +46,8 @@ func get_update() -> Dictionary:
 		"position": pos
 	}
 
-func init_node() -> Node:
+## Initializes the wrapper for this LinkedState, in this case the DemoEntity Node.
+func init_wrapper() -> DemoEntity:
 	var entity := DemoEntity.new()
 	entity.link_state = self
 	return entity

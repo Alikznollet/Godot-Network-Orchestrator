@@ -13,7 +13,7 @@ var link_states: Dictionary[int, LinkState] = {}
 # -- Adding States -- #
 
 ## Emitted when a LinkState is initialized with a Node.
-signal node_added(node: Node)
+signal state_linked(wrapper: Variant)
 
 ## Adds a LinkState to the state dictionary.
 ## This is to only be called from the authority. Though not enforced in here.
@@ -32,8 +32,8 @@ func link_state(ls: LinkState) -> void:
 	add_update(id, ls.to_dict())
 
 	# Return the node linked to the state if there is one.
-	var node: Node = ls.init_node()
-	if node: node_added.emit(node)
+	var wrapper: Variant = ls.init_wrapper()
+	state_linked.emit(wrapper)
 
 ## Will unlink a certain state from the GameState.
 ## Sends this to all clients so they can unlink it too.
@@ -77,9 +77,10 @@ func apply_dict(dict: Dictionary) -> void:
 		link_states[dict.link_id] = ls
 		ls.local_state_change.connect(local_change)
 		ls.external_state_change.connect(external_change)
+
 		# Get the node if there is one.
-		var node: Node = ls.init_node()
-		if node: node_added.emit(node)
+		var wrapper: Variant = ls.init_wrapper()
+		state_linked.emit(wrapper)
 
 ## Applies an array of inputs.
 func apply_inputs(inputs: Array[Dictionary]) -> void:

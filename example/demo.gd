@@ -24,7 +24,7 @@ func _ready() -> void:
 					setup_server_peer()
 
 					orchestrator = AuthoritativeNetworkOrchestrator.new()
-					orchestrator.node_added.connect(_node_added)
+					orchestrator.state_linked.connect(_state_linked)
 					multiplayer.peer_connected.connect(peer_connected)
 
 					add_child(orchestrator)
@@ -33,7 +33,7 @@ func _ready() -> void:
 					setup_client_peer()
 
 					orchestrator = ClientNetworkOrchestrator.new()
-					orchestrator.node_added.connect(_node_added)
+					orchestrator.state_linked.connect(_state_linked)
 					
 					add_child(orchestrator)
 					%UpdFreq.editable = false
@@ -53,11 +53,11 @@ func _ready() -> void:
 	)
 
 ## Triggered whenever the Orchestrator emits the node_added signal.
-func _node_added(node: Node) -> void:
-	if node is DemoEntity:
-		entities[node.link_state.owner_pid] = node
-		node.destroyed.connect(_entity_destroyed)
-		add_child(node)
+func _state_linked(wrapper: Variant) -> void:
+	if wrapper is DemoEntity:
+		entities[wrapper.link_state.owner_pid] = wrapper
+		wrapper.destroyed.connect(_entity_destroyed)
+		add_child(wrapper)
 
 ## Whenever an entity is supposed to be destroyed.
 func _entity_destroyed(entity: DemoEntity) -> void:

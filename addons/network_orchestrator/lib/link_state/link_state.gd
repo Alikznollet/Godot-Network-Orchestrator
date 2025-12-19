@@ -77,7 +77,7 @@ func apply_dict(dict: Dictionary) -> void
 @abstract 
 func get_update() -> Dictionary
 
-## Will initialize the node linked to this state.
-## When no node is linked to the state this does nothing.
-func init_node() -> Node:
-	return null
+## Initialize the resource that is supposed to be Linked between clients.
+## Wrapper can be a Node or a Resource, whatever is needed.
+@abstract
+func init_wrapper() -> Variant
