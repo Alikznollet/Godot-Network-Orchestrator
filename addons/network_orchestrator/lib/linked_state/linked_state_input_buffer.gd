@@ -1,6 +1,6 @@
 extends Resource
-class_name LinkStateInputTracker
-## Keeps track of inputs on a LinkState.
+class_name LinkedStateInputBuffer
+## Keeps track of inputs on a LinkedState.
 ##
 ## Inputs can be acknowledged by the authority and are then thrown away.
 

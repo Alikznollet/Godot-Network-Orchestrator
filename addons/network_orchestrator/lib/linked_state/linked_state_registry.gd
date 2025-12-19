@@ -1,5 +1,5 @@
-extends Node
-class_name LinkStateRegistry
+extends Resource
+class_name LinkedStateRegistry
 ## Registry of all current states.
 
 ## ID to SCRIPT for any State class.
@@ -12,7 +12,7 @@ static var _script_to_id: Dictionary = {}
 static func _static_init() -> void:
 	var state_classes: Array = []
 	for cls in ProjectSettings.get_global_class_list():
-		if cls.base == "LinkState":
+		if cls.base == "LinkedState":
 			state_classes.append(cls)
 
 	state_classes.sort_custom(func(a, b): return a["class"] < b["class"])
@@ -29,7 +29,7 @@ static func _static_init() -> void:
 
 ## Returns the ID for a certain State class.
 static func get_id(state_script: Script) -> int:
-	assert(_script_to_id.has(state_script), "LinkStateRegistry: No existing mapping for State %s." % state_script.get_global_name())
+	assert(_script_to_id.has(state_script), "LinkedStateRegistry: No existing mapping for State %s." % state_script.get_global_name())
 
 	return _script_to_id[state_script]
 

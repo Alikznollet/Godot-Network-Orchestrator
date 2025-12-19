@@ -10,17 +10,17 @@ var game_state: GameState:
 		game_state = new_game_state
 		if game_state: 
 			game_state.send_updates.connect(send_state)
-			game_state.node_added.connect(_add_node)
+			game_state.state_linked.connect(_state_linked)
 
 # -- Node adding -- #
 
-## Signal that notifies the outside a node was added via LinkState. 
-## This node can be tested for what it is with the 'is' keyword.
-signal node_added(node: Node)
+## Signal that notifies the outside that a NetworkState was added. 
+## A wrapper is provided to be tested by the developer.
+signal state_linked(wrapper: Variant)
 
-## Emits the node_added signal to emit the node itself.
-func _add_node(node: Node) -> void:
-	node_added.emit(node)
+## Emits the state_linked signal with the wrapper passed through.
+func _state_linked(wrapper: Variant) -> void:
+	state_linked.emit(wrapper)
 
 @abstract
 func send_state() -> void
