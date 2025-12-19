@@ -33,3 +33,11 @@ func receive_state(updates: Array[Dictionary]) -> void:
 	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag/1000).timeout
 
 	game_state.apply_dicts(updates)
+
+## Send all states to the client that asked for it.
+func sync_state(states: Array) -> void:
+	game_state.apply_dicts(states)
+
+## Request a game sync from the host.
+func request_game_sync() -> void:
+	sync_state.rpc_id(1, [{"id": multiplayer.get_unique_id()}])

@@ -113,8 +113,9 @@ func get_dict_from_id(id: int) -> Dictionary:
 	var ls: LinkState = link_states[id]
 	var dict := ls.to_dict()
 
-	dict["id"] = id
+	dict["link_id"] = id
 	dict["link_type"] = LinkStateRegistry.get_id(ls.get_script())
+	dict["ack_input_id"] = ls.last_input_id
 
 	return dict
 

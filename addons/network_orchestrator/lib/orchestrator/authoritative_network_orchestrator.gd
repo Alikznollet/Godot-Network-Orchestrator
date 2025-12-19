@@ -62,3 +62,10 @@ func send_state() -> void:
 ## Check them for legitimacy and then apply them to the authoritative state.
 func receive_state(inputs: Array[Dictionary]) -> void:
 	game_state.apply_inputs(inputs)
+
+## Send all states to the client that asked for it.
+func sync_state(states: Array) -> void:
+	var request: Dictionary = states.front()
+	var dicts: Array[Dictionary] = game_state.get_all_dicts()
+
+	sync_state.rpc_id(request.id, dicts)

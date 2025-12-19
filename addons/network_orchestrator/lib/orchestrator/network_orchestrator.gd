@@ -28,3 +28,7 @@ func send_state() -> void
 @rpc("any_peer", "call_remote", "unreliable")
 @abstract
 func receive_state(updates: Array[Dictionary]) -> void
+
+@rpc("any_peer", "call_remote", "reliable")
+@abstract
+func sync_state(states: Array) -> void
