@@ -1,10 +1,10 @@
 @abstract
 extends Resource
-class_name LinkState
+class_name LinkedState
 ## State of various objects or nodes.
 ##
 ## Used to update the objects this state is connected to via signaling.
-## LinkState objects or nodes that contain LinkState objects can only be created
+## LinkedState objects or nodes that contain LinkedState objects can only be created
 ## on the authority. This is to conserve id consistency.
 
 ## ID is stored here and in the dictionary.
@@ -16,23 +16,24 @@ var last_input_id: int = -1
 ## Requires the user to pass the size of the input buffer. Uses a buffer of 200 inputs by default.
 ## Window size always needs to be an integer larger than 0.
 func _init(input_window_size: int = 200) -> void:
-	assert(input_window_size > 0, "LinkState: Size of the input window should be an integer larger than 0.")
+	assert(input_window_size > 0, "LinkedState: Size of the input window should be an integer larger than 0.")
 	
 	input_tracker = LinkStateInputTracker.new(input_window_size)
 	input_tracker.new_input.connect(_new_input)
 
 # -- Removal -- #
 
-## Emitted when the LinkState is told to be unlinked.
+## Emitted when the LinkedState is told to be unlinked.
+## Further handling happens in the wrapper defined by the developer.
 signal unlinked()
 
-## Called by the GameState when the LinkState is unlinked.
+## Called by the GameState when the LinkedState is unlinked.
 func unlink() -> void:
 	unlinked.emit()
 
 # -- Input Tracking & Processing -- #
 
-## Listens whether a new input has been done for this LinkState.
+## Listens whether a new input has been done for this LinkedState.
 ## If so will emit the local_state_change signal.
 func _new_input() -> void:
 	local_state_change.emit(self)
@@ -42,7 +43,7 @@ func _new_input() -> void:
 @abstract
 func apply_input(input: Dictionary) -> void
 
-## Tracks the last n updates of the LinkState.
+## Tracks the last n updates of the LinkedState.
 ## Only holds potential queued inputs.
 var input_tracker: LinkStateInputTracker
 
@@ -56,15 +57,15 @@ signal update()
 
 ## Broadcasted whenever the state changes externally (from other source).
 @warning_ignore("unused_signal")
-signal external_state_change(ls: LinkState)
+signal external_state_change(ls: LinkedState)
 
 ## Broadcasted whenever the state receives a proposed change.
 @warning_ignore("unused_signal")
-signal local_state_change(ls: LinkState)
+signal local_state_change(ls: LinkedState)
 
 # -- State Alteration & Updates -- #
 
-## Will turn the LinkState into a dictionary that can be sent over the network.
+## Will turn the LinkedState into a dictionary that can be sent over the network.
 @abstract
 func to_dict() -> Dictionary
 

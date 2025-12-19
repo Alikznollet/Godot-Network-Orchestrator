@@ -12,7 +12,7 @@ static var _script_to_id: Dictionary = {}
 static func _static_init() -> void:
 	var state_classes: Array = []
 	for cls in ProjectSettings.get_global_class_list():
-		if cls.base == "LinkState":
+		if cls.base == "LinkedState":
 			state_classes.append(cls)
 
 	state_classes.sort_custom(func(a, b): return a["class"] < b["class"])

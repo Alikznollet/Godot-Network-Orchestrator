@@ -1,5 +1,5 @@
-extends LinkState
-class_name EntityLinkState
+extends LinkedState
+class_name EntityLinkedState
 
 ## Peer id of the owner, used to know who can control.
 var owner_pid: int
@@ -14,20 +14,22 @@ func move(direction: Vector2) -> void:
 	var input: Dictionary = { "direction": direction }
 	input_tracker.add_input(input)
 
+## Apply an input dictionary to the LinkedState.
 func apply_input(input: Dictionary) -> void:
-	# TODO: Check here whether the input is valid
 	global_position += input.direction
 
 	external_state_change.emit(self)
 
 # -- -- #
 
+## Turn the State into a dictionary that can be passed through the peers.
 func to_dict() -> Dictionary:
 	return {
 		"owner_pid": owner_pid,
 		"global_position": global_position
 	}
 
+## Apply a dictionary provided by to_dict()
 func apply_dict(dict: Dictionary) -> void:
 	owner_pid = dict.owner_pid
 
@@ -36,6 +38,7 @@ func apply_dict(dict: Dictionary) -> void:
 
 	external_state_change.emit(self)
 
+## Get an updated version of the LinkedState as a dictionary.
 func get_update() -> Dictionary:
 	var pos: Vector2 = global_position
 
@@ -46,8 +49,8 @@ func get_update() -> Dictionary:
 		"position": pos
 	}
 
-## Initializes the wrapper for this LinkedState, in this case the DemoEntity Node.
-func init_wrapper() -> DemoEntity:
-	var entity := DemoEntity.new()
-	entity.link_state = self
+## Initializes the wrapper for this LinkedState, in this case the ExampleEntity Node.
+func init_wrapper() -> ExampleEntity:
+	var entity := ExampleEntity.new()
+	entity.linked_state = self
 	return entity

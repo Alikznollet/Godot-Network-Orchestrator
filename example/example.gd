@@ -2,7 +2,7 @@ extends Node2D
 
 var orchestrator: NetworkOrchestrator
 
-var entities: Dictionary[int, DemoEntity] = {}
+var entities: Dictionary[int, ExampleEntity] = {}
 
 func _ready() -> void:
 	var args = OS.get_cmdline_args()
@@ -54,18 +54,18 @@ func _ready() -> void:
 
 ## Triggered whenever the Orchestrator emits the node_added signal.
 func _state_linked(wrapper: Variant) -> void:
-	if wrapper is DemoEntity:
-		entities[wrapper.link_state.owner_pid] = wrapper
+	if wrapper is ExampleEntity:
+		entities[wrapper.linked_state.owner_pid] = wrapper
 		wrapper.destroyed.connect(_entity_destroyed)
 		add_child(wrapper)
 
 ## Whenever an entity is supposed to be destroyed.
-func _entity_destroyed(entity: DemoEntity) -> void:
-	entities.erase(entity.link_state.owner_pid)
+func _entity_destroyed(entity: ExampleEntity) -> void:
+	entities.erase(entity.linked_state.owner_pid)
 
 ## Add an Entity for each peer that is connected.
 func peer_connected(id: int):
-	var els := EntityLinkState.new()
+	var els := EntityLinkedState.new()
 	els.owner_pid = id
 	els.global_position = Vector2.ZERO
 
@@ -96,6 +96,6 @@ func setup_client_peer():
 	await multiplayer.connected_to_server
 
 func _on_unlink_pressed() -> void:
-	var ls: LinkState = entities[multiplayer.get_unique_id()].link_state
+	var ls: LinkedState = entities[multiplayer.get_unique_id()].link_state
 	if orchestrator is AuthoritativeNetworkOrchestrator:
 		orchestrator.unlink_state(ls)
