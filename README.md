@@ -8,7 +8,7 @@ Godot plugin that makes fast-paced multiplayer networking easier to implement an
 ## Installation
 
 1) Download the plugin from the releases tab.
-2) Unzip and place the downloaded folder in `res:///addons`
+2) Unzip and place the downloaded folder in `res://addons`
 3) Enable the plugin by clicking `project -> project settings -> plugins` and then checking the `enabled` box for NetworkOrchestrator.
 
 ## Set-up
@@ -26,38 +26,41 @@ There can be **only one** `AuthoritativeNetworkOrchestrator` in a network, the o
 
 ## Usage
 
-To create your own state that can be exchanged you can make a new GDScript file and extend `LinkState`. To share it with other Orchestrators in the network you'll add it to the tracked states by calling `orchestrator.game_state.add_state(state)`. To correctly work a `LinkState` needs to have the following methods:
+To create your own state that can be exchanged you can make a new GDScript file and extend `LinkedState`. To share it with other Orchestrators in the network you'll add it to the tracked states by calling `orchestrator.link_state(state)`. To correctly work a `LinkedState` needs to implement the following methods:
 
 > [!IMPORTANT]
 > If any of below actions are omitted the state exchange will not work.
 
 - `to_dict()`: Converts the state to a dictionary that can be sent to others over rpc.
-- `apply_dict(dict)`: Will apply a dictionary created by `to_dict()` by updating the desired fields inside the state with what was in the dictionary. This is also required to call `input_tracker.acknowledge_input(dict.ack_input_id)` and then emit the `external_state_change` signal.
+- `apply_dict(dict)`: Will apply a dictionary created by `to_dict()` by updating the desired fields inside the state with what was in the dictionary. This is also required to call `input_buffer.acknowledge_input(dict.ack_input_id)` and then emit the `external_state_change` signal.
 - `apply_input(input)`: Perform the needed checks for validity of input and then apply it to the state. Then emit the `external_state_change` signal.
 - `get_update()`: Returns a dictionary that can be used to update the outside world that is depending on this state.
+- `init_wrapper()`: Returns a `Variant` node or resource that will be used as a wrapper for the `LinkedState`.
 
 There's also a few optional methods to override:
 
-- `init_node()`: Return a brand new node of the type this state is meant for.
-- Any Method that will create an `input` and then add it to the state by calling `input_tracker.add_input(input)`.
+- Any Method that will create an `input` and then add it to the state by calling `input_buffer.add_input(input)`.
 
-An example of all of these implementations can be found in `res://example/entity_link_state.gd`. A `LinkState` takes an optional size for the `input window`. This defines how many inputs can be cached at one time.
+Seperation of different input types is not natively implemented.
+
+An example of all of these implementations can be found in `res://example/entity_linked_state.gd`. A `LinkedState` takes an optional size for the `input window`. This defines how many inputs can be cached at one time.
 
 > [!IMPORTANT]
-> When overriding the _init() method of a `LinkState` make sure to call super._init(). Without this the input_tracker will not work correctly.
+> When overriding the _init() method of a `LinkedState` make sure to call `super._init()`. Without this the input_buffer will not work properly.
 
-After defining the `LinkState` implementation you link it to whatever object you want to use it with (this can be only one, or more). Then connect the `update` signal to any function that can then call `get_update()` to apply the updates to the object. Updates can also just be applied every physics loop, for things that require `move_and_slide()` for example.
+After defining the `LinkedState` implementation you link it to whatever object you want to use it with (this can be only one, or more). Then connect the `update` signal to any function that can then call `get_update()` to apply the updates to the object. Updates can also just be applied every physics loop, for things that require `move_and_slide()` for example.
 To have the state update you can just call whatever method you defined to perform input.
 
 To add a state to the world we can *link* and *unlink* it by calling the respective methods on the `AuthoritativeNetworkOrchestrator`.
 
-An example of this can be found in `res://example/demo_entity.gd` and of the whole scene in `res://example/demo.gd` and it's corresponding scene.
+When a `LinkedState` is added to the `GameState` the `state_linked` signal is emitted from the corresponding orchestrator, this signal carries the `wrapper` of that `LinkedState`. This can then be sorted or put into the right place.
 
-When a `LinkState` is linked to a node the `node_added` signal of the dedicated orchestrator will be emitted. This signal can be caught and then the node can be tested and sorted into the correct place.
+An example of this can be found in `res://example/example_entity.gd` and of the whole scene in `res://example/example.gd` and it's corresponding scene.
 
 That's all!
 
-## TODO
+## Missing Features
 
-- Implement Entity interpolation.
-- Implement Lag Compensation.
+- **Proper Native Interpolation**
+
+- **Lag Compensation**: Because this is only used for certain cases I'm leaving this be until I need it myself.
