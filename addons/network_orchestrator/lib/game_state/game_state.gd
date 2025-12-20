@@ -35,6 +35,8 @@ func link_state(ls: LinkedState) -> void:
 	var wrapper: Variant = ls.init_wrapper()
 	state_linked.emit(wrapper)
 
+	ls.external_state_change.emit(ls)
+
 ## Will unlink a certain state from the GameState.
 ## Sends this to all clients so they can unlink it too.
 ## Can only be called from the authority.
