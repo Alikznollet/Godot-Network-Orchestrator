@@ -27,6 +27,6 @@ func external_change(ls: LinkedState) -> void:
 
 ## Reacts to an Event made Change Authority side. Will also send the Event to the clients.
 func event_change(ls: LinkedState, event: LinkedEvent) -> void:
-	ls.update.emit()
-
 	send_event.emit(event.to_dictionary())
+	
+	ls.update.emit()
