@@ -28,6 +28,7 @@ func link_state(ls: LinkedState) -> void:
 	ls.id = id
 	ls.local_state_change.connect(local_change)
 	ls.external_state_change.connect(external_change)
+	ls.event_state_change.connect(event_change)
 
 	add_update(id, ls.to_dict())
 
@@ -79,6 +80,7 @@ func apply_dict(dict: Dictionary) -> void:
 		linked_states[dict.link_id] = ls
 		ls.local_state_change.connect(local_change)
 		ls.external_state_change.connect(external_change)
+		ls.event_state_change.connect(event_change)
 
 		# Get the node if there is one.
 		var wrapper: Variant = ls.init_wrapper()
@@ -161,3 +163,23 @@ signal send_updates()
 
 ## Array of updated LinkedState ids.
 var updates: Dictionary[int, Dictionary] = {}
+
+# -- Events -- #
+
+@abstract
+## Linked up to the state change by event.
+func event_change(ls: LinkedState, event: LinkedEvent) -> void
+
+## Signals the orchestrator an event has to be sent.
+signal send_event(event: Dictionary)
+
+## Listens to each LinkedState for events.
+func _new_event(event: LinkedEvent) -> void:
+	send_event.emit(event.to_dictionary())
+
+## Apply an event to the correct LinkedState.
+func apply_event(event: LinkedEvent) -> void:
+	var ls: LinkedState = linked_states.get(event.link_id)
+
+	if ls:
+		ls.apply_event(event)

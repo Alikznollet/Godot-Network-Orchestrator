@@ -62,4 +62,25 @@ offset_right = 8.0
 grow_vertical = 0
 text = "Unlink"
 
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -115.0
+offset_right = 115.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="Event" type="Button" parent="CanvasLayer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "With Events"
+
+[node name="NoEvent" type="Button" parent="CanvasLayer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Without Events"
+
 [connection signal="pressed" from="CanvasLayer/Unlink" to="." method="_on_unlink_pressed"]
+[connection signal="pressed" from="CanvasLayer/HBoxContainer/Event" to="." method="_on_event_pressed"]
+[connection signal="pressed" from="CanvasLayer/HBoxContainer/NoEvent" to="." method="_on_no_event_pressed"]

@@ -41,3 +41,7 @@ func sync_state(states: Array) -> void:
 ## Request a game sync from the host.
 func request_game_sync() -> void:
 	sync_state.rpc_id(1, [{"id": multiplayer.get_unique_id()}])
+
+## Receives an event from the authority.
+func send_event(event: Dictionary) -> void:
+	game_state.apply_event(LinkedEvent.from_dictionary(event))

@@ -11,6 +11,7 @@ var game_state: GameState:
 		if game_state: 
 			game_state.send_updates.connect(send_state)
 			game_state.state_linked.connect(_state_linked)
+			game_state.send_event.connect(send_event)
 
 # -- Node adding -- #
 
@@ -32,3 +33,7 @@ func receive_state(updates: Array[Dictionary]) -> void
 @rpc("any_peer", "call_remote", "reliable")
 @abstract
 func sync_state(states: Array) -> void
+
+@rpc("authority", "call_remote", "reliable")
+@abstract
+func send_event(event: Dictionary) -> void

@@ -4,6 +4,8 @@ var orchestrator: NetworkOrchestrator
 
 var entities: Dictionary[int, ExampleEntity] = {}
 
+var counter: Counter
+
 func _ready() -> void:
 	var args = OS.get_cmdline_args()
 	var parsed := {}
@@ -52,12 +54,18 @@ func _ready() -> void:
 			if orchestrator is ClientNetworkOrchestrator: orchestrator.artificial_lag = int(val)
 	)
 
+	%Event.disabled = multiplayer.get_unique_id() != 1
+	%NoEvent.disabled = multiplayer.get_unique_id() != 1
+
 ## Triggered whenever the Orchestrator emits the node_added signal.
 func _state_linked(wrapper: Variant) -> void:
 	if wrapper is ExampleEntity:
 		entities[wrapper.linked_state.owner_pid] = wrapper
 		wrapper.destroyed.connect(_entity_destroyed)
 		add_child(wrapper)
+	if wrapper is Counter:
+		add_child(wrapper)
+		counter = wrapper
 
 ## Whenever an entity is supposed to be destroyed.
 func _entity_destroyed(entity: ExampleEntity) -> void:
@@ -71,6 +79,10 @@ func peer_connected(id: int):
 
 	if orchestrator is AuthoritativeNetworkOrchestrator:
 		orchestrator.link_state(els)
+
+		if id == 1:
+			var counter_ls := CounterLinkedState.new()
+			orchestrator.link_state(counter_ls)
 
 ## Sets up a single P2P server on port 9999.
 func setup_server_peer():
@@ -99,3 +111,11 @@ func _on_unlink_pressed() -> void:
 	var ls: LinkedState = entities[multiplayer.get_unique_id()].linked_state
 	if orchestrator is AuthoritativeNetworkOrchestrator:
 		orchestrator.unlink_state(ls)
+
+func _on_no_event_pressed() -> void:
+	for i in range(100):
+		counter.linked_state.increment_no_event()
+
+func _on_event_pressed() -> void:
+	for i in range(100):
+		counter.linked_state.increment_event()

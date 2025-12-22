@@ -78,6 +78,20 @@ func apply_dict(dict: Dictionary) -> void
 @abstract 
 func get_update() -> Dictionary
 
+# -- Events -- #
+
+## Emitted when something was changed about the state with an Event.
+signal event_state_change(ls: LinkedState)
+
+## Applies an event to the current LinkedState.
+func apply_event(event: LinkedEvent) -> void:
+	for key in event.data:
+		set(key, event.data[key])
+
+	event_state_change.emit(self, event)
+
+# -- Wrapper -- #
+
 ## Initialize the resource that is supposed to be Linked between clients.
 ## Wrapper can be a Node or a Resource, whatever is needed.
 @abstract

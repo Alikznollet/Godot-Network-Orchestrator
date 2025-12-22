@@ -21,3 +21,7 @@ func local_change(ls: LinkedState) -> void:
 func external_change(ls: LinkedState) -> void:
 	# We have received an authoritative state from the server so we just update.
 	ls.update.emit()
+
+## Reacts to an Event change client sided.
+func event_change(ls: LinkedState, _event: LinkedEvent) -> void:
+	ls.update.emit()

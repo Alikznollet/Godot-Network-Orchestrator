@@ -69,3 +69,7 @@ func sync_state(states: Array) -> void:
 	var dicts: Array[Dictionary] = game_state.get_all_dicts()
 
 	sync_state.rpc_id(request.id, dicts)
+
+## Send an event to the client.
+func send_event(event: Dictionary) -> void:
+	send_event.rpc(event)
