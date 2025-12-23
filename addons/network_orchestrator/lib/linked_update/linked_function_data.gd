@@ -8,6 +8,10 @@ var function_name: String
 ## ! Arguments need to be standard types.
 var arguments: Array
 
+func _init(func_name: String, args: Array) -> void:
+	function_name = func_name
+	arguments = args
+
 func apply(applicable: Variant) -> void:
 	applicable.callv(function_name, arguments)
 

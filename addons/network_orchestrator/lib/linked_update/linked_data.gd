@@ -25,16 +25,39 @@ static func from_dictionary(dict: Dictionary) -> LinkedData:
 
 	match dict.ld_type:
 		DATA_TYPE.FUNCTION:
-			ld = LinkedFunctionData.new()
-			ld.function_name = dict.fn
-			ld.arguments = dict.args
+			ld = LinkedFunctionData.new(
+				dict.fn,
+				dict.args
+			)
 		DATA_TYPE.GET:
-			ld = LinkedGetData.new()
-			ld.key = dict.key
-			ld.next = LinkedData.from_dictionary(dict.next)
+			ld = LinkedGetData.new(
+				dict.key,
+				LinkedData.from_dictionary(dict.next)
+			)
 		DATA_TYPE.SET:
-			ld = LinkedSetData.new()
-			ld.key = dict.key
-			ld.value = dict.val
+			ld = LinkedSetData.new(
+				dict.key,
+				dict.val
+			)
 
 	return ld
+
+# -- Fast Creation -- #
+
+static func GET_FUNC(key: String, func_name: String, arguments: Array) -> LinkedData:
+	return LinkedGetData.new(
+		key,
+		LinkedFunctionData.new(
+			func_name,
+			arguments
+		)
+	)
+
+static func GET_SET(key: String, key_2: String, value: Variant) -> LinkedData:
+	return LinkedGetData.new(
+		key,
+		LinkedSetData.new(
+			key_2,
+			value
+		)
+	)

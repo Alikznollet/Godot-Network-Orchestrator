@@ -7,6 +7,10 @@ var key: String
 ## The next piece of LinkedData to traverse.
 var next: LinkedData
 
+func _init(p_key: String, p_next: LinkedData) -> void:
+	key = p_key
+	p_next = next
+
 func apply(applicable: Variant) -> void:
 	var next_applicable: Variant = applicable.get(key)
 	next.apply(next_applicable)

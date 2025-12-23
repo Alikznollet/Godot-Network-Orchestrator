@@ -10,3 +10,7 @@ var data: Array[LinkedData] = []
 
 ## The backend stuff this update needs to be useful.
 var settings: Dictionary = {}
+
+func apply_update(ls: LinkedState) -> void:
+	for ld in data:
+		ld.apply(ls)
