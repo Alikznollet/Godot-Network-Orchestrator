@@ -1,6 +1,8 @@
 extends LinkedData
 class_name LinkedFunctionData
 
+# TODO: Make sure some functions are blacklisted.
+
 ## Name of the function to be called.
 var function_name: String
 

@@ -1,5 +1,5 @@
 @abstract
-extends Node
+extends Resource
 class_name LinkedData
 ## Holds Data that was linked via a LinkedState.
 ##
