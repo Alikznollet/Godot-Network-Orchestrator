@@ -38,16 +38,9 @@ func unlink() -> void:
 func _new_input() -> void:
 	local_state_change.emit(self)
 
-## Applies an input dictionary.
-## Only called from the authority where client inputs are the incoming packets.
-@abstract
-func apply_input(input: Dictionary) -> void
-
 ## Tracks the last n updates of the LinkedState.
 ## Only holds potential queued inputs.
 var input_buffer: LinkedStateInputBuffer
-
-# ! Functions regarding inputs are defined in the link_states themselves.
 
 # -- Signals -- #
 
@@ -64,15 +57,6 @@ signal external_state_change(ls: LinkedState, ld: LinkedData)
 signal local_state_change(ls: LinkedState, ld: LinkedData)
 
 # -- State Alteration & Updates -- #
-
-## Will turn the LinkedState into a dictionary that can be sent over the network.
-@abstract
-func to_dict() -> Dictionary
-
-## Will apply the dictionary to the current state.
-## ! Do not forget to send an external_state_change signal at the end.
-@abstract
-func apply_dict(dict: Dictionary) -> void
 
 ## Returns everything the outside needs to update themselves.
 @abstract 

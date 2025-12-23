@@ -30,13 +30,11 @@ func link_state(ls: LinkedState) -> void:
 	ls.external_state_change.connect(external_change)
 	ls.event_state_change.connect(event_change)
 
-	add_update(id, LinkedDummyData.new())
-
 	# Return the node linked to the state if there is one.
 	var wrapper: Variant = ls.init_wrapper()
 	state_linked.emit(wrapper)
 
-	ls.external_state_change.emit(ls)
+	ls.external_state_change.emit(ls, LinkedDummyData.new())
 
 ## Will unlink a certain state from the GameState.
 ## Sends this to all clients so they can unlink it too.
@@ -116,7 +114,7 @@ func get_dict_from_id(id: int) -> Dictionary:
 	if not linked_states.has(id): print("GameState: Could not find dict with id."); return {};
 
 	var ls: LinkedState = linked_states[id]
-	var dict := ls.to_dict()
+	var dict := {}
 
 	dict["link_id"] = id
 	dict["link_type"] = LinkedStateRegistry.get_id(ls.get_script())

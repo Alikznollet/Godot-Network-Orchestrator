@@ -1,34 +1,32 @@
 extends LinkedState
 class_name CounterLinkedState
 
+# -- Count -- #
+
 var count: int = 0
 
-func increment_no_event() -> void:
-	input_buffer.add_input({
-		"count": count + 1
-	})
-
-func increment_event() -> void:
-	var event := LinkedEvent.new(
-		id,
-		{ "count": count + 1 }
+## Sends an input to increment the counter.
+func increment_counter_input() -> void:
+	input_buffer.add_input(
+		LinkedFunctionData.new(
+			increment_counter.get_method(),
+			[]
+		)
 	)
-	apply_event(event)
 
-func apply_input(input: Dictionary) -> void:
-	count = input.count
+## Actually increments the counter based on the input. This is where validation would occur.
+func increment_counter() -> void:
+	count += 1
+	external_state_change.emit(
+		self,
+		# This then directly forces the value to update again on the client.
+		LinkedSetData.new(
+			"count",
+			count
+		)
+	)
 
-	external_state_change.emit(self)
-
-func to_dict() -> Dictionary:
-	return {
-		"count": count
-	}
-
-func apply_dict(dict: Dictionary) -> void:
-	count = dict.count
-
-	external_state_change.emit(self)
+# -- Misc -- #
 
 func get_update() -> Dictionary:
 	return {
