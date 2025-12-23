@@ -1,8 +1,30 @@
 extends Node2D
 
+## The local orchestrator.
 var orchestrator: NetworkOrchestrator
 
-var counter: Counter
+# -- Counter -- #
+
+var counter: Counter:
+	set(new_counter):
+		counter = new_counter
+
+		if counter:
+			counter.linked_state.unlinked.connect(_counter_unlinked)
+
+func _counter_unlinked() -> void:
+	counter.queue_free()
+	counter = null
+
+func _on_unlink_pressed() -> void:
+	orchestrator.unlink_state(counter.linked_state)
+
+func _on_no_event_pressed() -> void:
+	for i in range(100):
+		if counter: counter.linked_state.increment_counter_input()
+		await get_tree().create_timer(0.05).timeout
+
+# -- Misc -- #
 
 func _ready() -> void:
 	var args = OS.get_cmdline_args()
@@ -95,11 +117,3 @@ func setup_client_peer():
 	multiplayer.multiplayer_peer = peer
 
 	await multiplayer.connected_to_server
-
-func _on_unlink_pressed() -> void:
-	pass
-
-func _on_no_event_pressed() -> void:
-	for i in range(100):
-		counter.linked_state.increment_counter_input()
-		await get_tree().create_timer(0.05).timeout

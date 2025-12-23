@@ -43,6 +43,8 @@ static func from_dictionary(dict: Dictionary) -> LinkedData:
 				dict.key,
 				dict.val
 			)
+		DATA_TYPE.DUMMY:
+			ld = LinkedDummyData.new()
 
 	return ld
 

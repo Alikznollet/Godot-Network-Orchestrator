@@ -3,8 +3,14 @@ class_name CounterLinkedState
 
 # -- Count -- #
 
-var count: int = 0
+# ! FORCE SET
+var count: int = 0:
+	set(new_count):
+		count = new_count
+		# This makes the local state update itself
+		external_state_change.emit(self, LinkedDummyData.new())
 
+# ! SEND INPUT
 ## Sends an input to increment the counter.
 func increment_counter_input() -> void:
 	input_buffer.add_input(
@@ -14,6 +20,7 @@ func increment_counter_input() -> void:
 		)
 	)
 
+# ! REACT TO INPUT
 ## Actually increments the counter based on the input. This is where validation would occur.
 func increment_counter() -> void:
 	count += 1
