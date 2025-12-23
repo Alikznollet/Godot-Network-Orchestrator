@@ -5,10 +5,14 @@ class_name LinkedData
 ##
 ## Carried by a LinkedUpdate this class can carry the data to another peer.
 
+## The Input ID of this LinkedData. -1 If not an Input.
+var input_id: int = -1
+
 enum DATA_TYPE {
 	FUNCTION,
 	GET,
-	SET
+	SET,
+	DUMMY
 }
 
 @abstract

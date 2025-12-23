@@ -30,7 +30,7 @@ func link_state(ls: LinkedState) -> void:
 	ls.external_state_change.connect(external_change)
 	ls.event_state_change.connect(event_change)
 
-	add_update(id, ls.to_dict())
+	add_update(id, LinkedDummyData.new())
 
 	# Return the node linked to the state if there is one.
 	var wrapper: Variant = ls.init_wrapper()
@@ -45,7 +45,7 @@ func unlink_state(ls: LinkedState) -> void:
 	linked_states.erase(ls.id)
 	ls.unlink()
 
-	add_update(ls.id, { "unlinked": true })
+	add_update(ls.id, LinkedDummyData.new(), true)
 
 # -- Applying Dicts and Inputs -- #
 
@@ -132,37 +132,49 @@ func local_change(ls: LinkedState) -> void
 
 @abstract
 ## Reacts to a change from outside. Client -> Authority or other way around.
-func external_change(ls: LinkedState) -> void
+func external_change(ls: LinkedState, ld: LinkedData) -> void
 
 ## Returns an array of updates with their ids inserted into the update dictionary.
-func get_updated_dicts() -> Array[Dictionary]:
+func get_updates_as_dicts() -> Array[Dictionary]:
 	var dicts: Array[Dictionary] = []
 	for link_id in updates:
-		var dict: Dictionary = updates[link_id]
-		dict["link_id"] = link_id 
+		var upd: LinkedUpdate = updates[link_id] 
 
 		# This means the state is still linked.
-		if not dict.has("unlinked"): 
+		if not upd.unlinked: 
 			var ls: LinkedState = linked_states[link_id]
-			dict["link_type"] = LinkedStateRegistry.get_id(ls.get_script())
-			dict["ack_input_id"] = ls.last_input_id
+			upd.link_type = LinkedStateRegistry.get_id(ls.get_script())
+			upd.ack_input_id = ls.last_input_id
 		
-		dicts.append(dict)
+		dicts.append(upd.to_dictionary())
 
 	updates.clear()
 	return dicts
 
 ## Adds an update linked to a link_id to the updates dictionary.
 ## This overwrites whatever was there before.
-func add_update(link_id: int, update: Dictionary) -> void:
-	updates[link_id] = update
+func add_update(link_id: int, data: LinkedData, unlinked: bool = false) -> void:
+	var upd: LinkedUpdate = updates.get_or_add(
+		link_id,
+		LinkedUpdate.new(
+			link_id
+		)
+	)
+	upd.add_data(data)
+
+## Apply all of the incoming LinkedUpdate objects.
+func apply_updates(update_dicts: Array[Dictionary]) -> void:
+	for update_dict in update_dicts:
+		var update: LinkedUpdate = LinkedUpdate.from_dictionary(update_dict)
+		var ls: LinkedState = linked_states.get(update.link_id)
+		update.apply_update(ls)
 
 ## Will tell the connected function to send all the current updates.
 @warning_ignore("unused_signal")
 signal send_updates()
 
 ## Array of updated LinkedState ids.
-var updates: Dictionary[int, Dictionary] = {}
+var updates: Dictionary[int, LinkedUpdate] = {}
 
 # -- Events -- #
 

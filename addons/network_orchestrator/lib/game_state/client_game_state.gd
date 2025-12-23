@@ -9,8 +9,8 @@ class_name ClientGameState
 ## We want to send this input to the server.
 func local_change(ls: LinkedState) -> void:
 	# When an input happens we immediately add it as an update and send it to the server.
-	var input: Dictionary = ls.input_buffer.get_latest_input()
-	add_update(ls.id, input)
+	var ld: LinkedData = ls.input_buffer.get_latest_input()
+	add_update(ls.id, ld)
 
 	## Immediately tell the client to update. This will trigger Client Prediction.
 	ls.update.emit()
@@ -18,7 +18,7 @@ func local_change(ls: LinkedState) -> void:
 	send_updates.emit()
 
 ## An external change means the authority forced us to update our local state.
-func external_change(ls: LinkedState) -> void:
+func external_change(ls: LinkedState, ld: LinkedData) -> void:
 	# We have received an authoritative state from the server so we just update.
 	ls.update.emit()
 

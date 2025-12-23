@@ -22,7 +22,7 @@ func _init() -> void:
 
 ## Send the client state to the authority.
 func send_state() -> void:
-	var update: Array[Dictionary] = game_state.get_updated_dicts()
+	var update: Array[Dictionary] =  game_state.get_updates_as_dicts()
 
 	if not update.is_empty():
 		if OS.is_debug_build(): await get_tree().create_timer(artificial_lag/1000).timeout
@@ -32,7 +32,7 @@ func send_state() -> void:
 func receive_state(updates: Array[Dictionary]) -> void:
 	if OS.is_debug_build(): await get_tree().create_timer(artificial_lag/1000).timeout
 
-	game_state.apply_dicts(updates)
+	game_state.apply_updates(updates)
 
 ## Send all states to the client that asked for it.
 func sync_state(states: Array) -> void:

@@ -53,15 +53,15 @@ func unlink_state(ls: LinkedState) -> void:
 
 ## Send the authoritative state to all connected peers.
 func send_state() -> void:
-	var update: Array[Dictionary] = game_state.get_updated_dicts()
+	var update: Array[Dictionary] = game_state.get_updates_as_dicts()
 
 	if not update.is_empty():
 		receive_state.rpc(update)
 
 ## Receive client states from all connected peers.
 ## Check them for legitimacy and then apply them to the authoritative state.
-func receive_state(inputs: Array[Dictionary]) -> void:
-	game_state.apply_inputs(inputs)
+func receive_state(updates: Array[Dictionary]) -> void:
+	game_state.apply_updates(updates)
 
 ## Send all states to the client that asked for it.
 func sync_state(states: Array) -> void:

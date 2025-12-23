@@ -22,25 +22,25 @@ func _init(i_max_tracked: int) -> void:
 var input_id_base: int = 0
 
 ## Array of inputs, acts as a moving window over the track_ids.
-var inputs: Array[Dictionary] = []
+var inputs: Array[LinkedData] = []
 
 ## Adds an input to the tracked inputs.
 ## If the buffer is not yet overflowing will just add it at the end.
 ## If the buffer starts overflowing increments input_id_base with one and throws away the first added value.
-func add_input(input: Dictionary) -> void:
+func add_input(input: LinkedData) -> void:
 	if len(inputs) >= max_tracked:
 		input_id_base += 1
 		inputs.pop_front()
 	
 	var buf_id: int = len(inputs)
 	var input_id: int = input_id_base + buf_id
-	input["input_id"] = input_id
+	input.input_id = input_id
 
 	inputs.push_back(input)
 	new_input.emit()
 
 ## Will return the latest performed input.
-func get_latest_input() -> Dictionary:
+func get_latest_input() -> LinkedData:
 	return inputs.back()
 
 ## Acknowledges inputs up to track_id.

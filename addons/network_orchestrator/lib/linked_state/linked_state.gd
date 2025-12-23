@@ -57,11 +57,11 @@ signal update()
 
 ## Broadcasted whenever the state changes externally (from other source).
 @warning_ignore("unused_signal")
-signal external_state_change(ls: LinkedState)
+signal external_state_change(ls: LinkedState, ld: LinkedData)
 
 ## Broadcasted whenever the state receives a proposed change.
 @warning_ignore("unused_signal")
-signal local_state_change(ls: LinkedState)
+signal local_state_change(ls: LinkedState, ld: LinkedData)
 
 # -- State Alteration & Updates -- #
 
